@@ -1,0 +1,16 @@
+        W R R R
+        W O O O         
+        B O O O         
+        Y O O O         
+        O W W W         
+        R Y Y W         
+        G W B B         
+        G Y G G         
+G B R R W B Y Y R R B B 
+W B G Y O R R R W B G G 
+G W G Y O R R R W B G G 
+G G Y Y R O O O Y G W B 
+        B B B B         
+        B Y Y Y         
+        R W W G         
+        O Y Y W         

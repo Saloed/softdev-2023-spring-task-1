@@ -1,0 +1,22 @@
+Possible arguments:
+
+    - [exit] (stop program)
+
+    - [print] (print state of the cube)
+
+    - [number](layer of the cube from right side except of last left one)
+      [RLFBUD](type of move)
+      ['](if against clockwise direction)
+      [number](times you want revolve)
+
+    - [rotate][XYZ][*-]
+      ('*' - clockwise direction)
+      ('-' - against clockwise direction)
+
+    - [scramble]
+      (scramble cube)
+
+Examples: 
+	0R1 1U2 0B'1 0D2
+	rotateX*
+	rotataeY-
