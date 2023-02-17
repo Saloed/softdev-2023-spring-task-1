@@ -1,0 +1,3 @@
+To start:
+  - mvn package
+  - java -jar .\target\cube-0.0.1-SNAPSHOT.jar
