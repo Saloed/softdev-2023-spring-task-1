@@ -4,9 +4,14 @@ import java.util.*;
 
 
 public class Goods {
-    static TreeMap<Integer, Goods> goodsList = new TreeMap<>();
-    private final String name;
-    private final Double price; // Цена указывается числом через запятую
+    private final Map<Integer, Goods> goodsList = new HashMap<>();
+    private String name;
+    private Double price; // Цена указывается числом через запятую
+
+    Goods() {
+        name = "Undefined";
+        price = 0.0;
+    }
 
     Goods(String name, Double price) {
         this.name = name;
@@ -21,44 +26,50 @@ public class Goods {
         return price;
     }
 
-    static void addProduct(String name, Double price, int code) { // Добавляет новый продукт с именем, ценой и кодом
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setPrice(Double price) {
+        this.price = price;
+    }
+
+    void addProduct(String name, Double price, int code) { // Добавляет новый продукт с именем, ценой и кодом
         Goods prod = new Goods(name, price);
         goodsList.put(code, prod);
     }
 
-    public static void changePrice(int code, Double price) { // Меняет цену продукта по его коду
+    public void changePrice(int code, Double price) { // Меняет цену продукта по его коду
         if (goodsList.containsKey(code)) {
-            Goods obj = new Goods(goodsList.get(code).getName(), price);
-            goodsList.put(code, obj);
+            goodsList.get(code).setPrice(price);
         } else {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("Invalid code");
         }
     }
 
-    public static void changeName(int code, String name) { // Меняет имя продукта подобно смене цены
+    public void changeName(int code, String name) { // Меняет имя продукта подобно смене цены
         if (goodsList.containsKey(code)) {
-            Goods obj = new Goods(name, goodsList.get(code).getPrice());
-            goodsList.put(code, obj);
+            goodsList.get(code).setName(name);
         } else {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("Invalid code");
         }
     }
 
-    static public void removeGoods(int code) { // Удаляет продукт по его коду
+    public void removeGoods(int code) { // Удаляет продукт по его коду
         if (goodsList.containsKey(code)) {
             goodsList.remove(code);
         } else {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("Invalid code");
         }
     }
 
-    public static Double priceForAmount(List<ProdPair> shoppingList) {
+    public Double priceForAmount(List<ProdPair> shoppingList) {
         double fin = 0.0;
         for (ProdPair intPair : shoppingList) {
             if (goodsList.containsKey(intPair.code())) {
                 fin += goodsList.get(intPair.code()).getPrice() * intPair.amount();
             } else {
-                throw new IllegalArgumentException();
+                throw new IllegalArgumentException("Invalid code");
             }
         }
         return fin;
