@@ -1,24 +1,20 @@
 package task1;
 
 
-import javax.naming.InvalidNameException;
 import java.util.Arrays;
+import java.util.NoSuchElementException;
 
 
-class Piece { // вспомогательный класс для фигур
+class Piece {
+    // вспомогательный класс для фигур
 
     String name;
     public Piece (String name) {
         this.name = name;
     }
 
-}
-
-
-public class ChessBoard {
-
-
-    protected final String[] availablePieces = { // список доступных фигур
+    protected static final String[] availablePieces = {
+            // список доступных фигур
             "bPawn",
             "wPawn",
             "bKnight",
@@ -32,7 +28,53 @@ public class ChessBoard {
             "bKing",
             "wKing"
     };
-    protected String[][] board = { // доска, реализовать нотацию, которая соотносится с индексами массива, вместо этих черточек непонятных
+
+    protected static void isNameAvailable(String name) throws IllegalArgumentException {
+        // проверка имени фигуры, стоит перенести (вместе со списком доступных) в класс фигур
+        if(!Arrays.asList(availablePieces).contains(name)){
+            throw new IllegalArgumentException(
+                    "Такой фигуры в наборе нет. Правила: первый символ указывает цвет (b/w), дальше идёт название фигуры"
+            );
+        }
+    }
+}
+
+
+
+class PutException extends Exception {
+    private String message;
+
+    public PutException(String s) {
+        this.message = s;
+    }
+
+    public String toString(String s) {
+        return message;
+    }
+}
+
+class MoveException extends Exception {
+
+    private String message;
+
+    public MoveException(String s) {
+        this.message = s;
+    }
+
+    public String toString(String s) {
+        return message;
+    }
+
+}
+
+public class ChessBoard {
+    // добавить проверку на то, что короли не стоят на соседних клетках
+    // проверка находится ли король под шахом
+    // запретить ставить короля на доску?
+
+    protected String[][] board = {
+            // доска
+            // реализовать нотацию, которая соотносится с индексами массива, вместо этих черточек непонятных
             {"_", "_", "_", "_", "_", "_", "_", "_"},
             {"_", "_", "_", "_", "_", "_", "_", "_"},
             {"_", "_", "_", "_", "_", "_", "_", "_"},
@@ -43,15 +85,20 @@ public class ChessBoard {
             {"_", "_", "_", "_", "_", "_", "_", "_"},
     };
 
-    public ChessBoard() throws InvalidNameException { // конструктор
+    public ChessBoard() throws IllegalArgumentException, PutException{
+        // конструктор
         Piece bKing = new Piece("bKing");
         Piece wKing = new Piece("wKing");
         this.put(bKing, 0, 4);
         this.put(wKing, 7, 4);
     }
 
-    public void put(Piece piece, int x, int y) throws InvalidNameException { // метод постановки фигуры на доску
-        isNameAvailable(piece.name);
+    public void put(Piece piece, int x, int y) throws IllegalArgumentException, PutException {
+        // метод постановки фигуры на доску
+        Piece.isNameAvailable(piece.name);
+        if(!board[x][y].equals("_")) {
+            throw new PutException("Клетка уже занята");
+        }
         switch (piece.name) {
             case ("bPawn") -> {
                 int bpCount = 0;
@@ -65,7 +112,7 @@ public class ChessBoard {
                 if (bpCount <= 7) {
                     board[x][y] = piece.name;
                 } else {
-                    System.out.println("Не может быть больше 8-ми пешек одного цвета!"); // заменить бросанием исключения
+                    throw new PutException("Не может быть больше 8-ми пешек одного цвета");
                 }
             }
             case ("wPawn") -> {
@@ -80,7 +127,7 @@ public class ChessBoard {
                 if (wpCount <= 7) {
                     board[x][y] = piece.name;
                 } else {
-                    System.out.println("Не может быть больше 8-ми пешек одного цвета!"); // заменить бросанием исключения
+                    throw new PutException("Не может быть больше 8-ми пешек одного цвета");
                 }
             }
             case ("bKing") -> {
@@ -96,7 +143,7 @@ public class ChessBoard {
                 if (bkCount == 0) {
                     board[x][y] = piece.name;
                 } else {
-                    System.out.println("Такой король уже есть на доске"); // заменить бросанием исключения
+                    throw new PutException("Такой король уже есть на доске");
                 }
             }
             case ("wKing") -> {
@@ -112,14 +159,15 @@ public class ChessBoard {
                 if (wkCount == 0) {
                     board[x][y] = piece.name;
                 } else {
-                    System.out.println("Такой король уже есть на доске"); // заменить бросанием исключения
+                    throw new PutException("Такой король уже есть на доске");
                 }
             }
             default -> board[x][y] = piece.name;
         }
     }
 
-    public void move(int xf, int yf, int xt, int yt) { // метод передвижения фигур
+    public void move(int xf, int yf, int xt, int yt) throws MoveException, NoSuchElementException {
+        // метод передвижения фигур
         if(!board[xf][yf].equals("_")) {
             if(board[xt][yt].equals("_")) {
                 String curPiece = board[xf][yf];
@@ -127,40 +175,38 @@ public class ChessBoard {
                 board[xt][yt] = curPiece;
             }
             else {
-                System.out.println("Ставить фигуру некуда"); // заменить бросанием исключения
+                throw new MoveException("Некуда ставить");
             }
         }
         else {
-            System.out.println("Нечего двигать"); // заменить бросанием исключения
+            throw new NoSuchElementException("исходная клетка пуста");
         }
 
     }
 
-    public void remove(int x, int y) { // метод очистки клетки
+    public void remove(int x, int y) {
+        // метод очистки клетки
         if(!board[x][y].equals("_")) {
             board[x][y] = "_";
         } else {
-            System.out.println("Клетка уже пуста!"); // заменить бросанием исключения
+            throw new NoSuchElementException("исходная клетка пуста");
         }
 
     }
 
-    public void printBoard() { // вывести в консоль текущую ситуацию на доске
+    public void printBoard() {
+        // вывести в консоль текущую позицию(±красиво и с нотацией)
         for(int i = 0; i < 8; i++) {
             for(int j = 0; j < 8; j++) {
-                System.out.print(board[i][j] + " ");
+                StringBuilder s = new StringBuilder(board[i][j]);
+                while(s.length() < 7) {
+                    s.append(" ");
+                }
+                System.out.print(s);
             }
-            System.out.print("\n");
+            System.out.print(8 - i + "\n\n");
         }
-        System.out.print("\n");
-    }
-
-    private void isNameAvailable(String name) throws InvalidNameException{ // проверка имени фигуры, стоит перенести
-        // (вместе со списком доступных) в класс фигур
-        if(!Arrays.asList(availablePieces).contains(name)){
-            throw new InvalidNameException("Такой фигуры в наборе нет. Правила: первый символ указывает цвет (b/w)," +
-                    " дальше идёт название фигуры");
-        }
+        System.out.print("a      b      c      d      e      f      g      h      " + "\n");
     }
 
 }
