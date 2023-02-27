@@ -16,7 +16,6 @@ public class main {
             myChess.put(bPawn, 1, i);
             myChess.put(wPawn, 6, i);
         }
-        myChess.printBoard();
         myChess.remove(6, 7);
         myChess.printBoard();
     }

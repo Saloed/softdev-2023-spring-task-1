@@ -69,6 +69,7 @@ class MoveException extends Exception {
 public class ChessBoard {
     // добавить проверку на то, что короли не стоят на соседних клетках
     // проверка находится ли король под шахом
+    // добавить метод дефолтной расстановки фигур ну так по приколу
 
     protected String[][] board = {
             // доска
@@ -203,7 +204,7 @@ public class ChessBoard {
             }
             System.out.print(8 - i + "\n\n");
         }
-        System.out.print("a      b      c      d      e      f      g      h      " + "\n");
+        System.out.println("a      b      c      d      e      f      g      h      \n");
     }
 
 }
