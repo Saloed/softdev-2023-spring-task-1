@@ -30,7 +30,6 @@ class Piece {
     };
 
     protected static void isNameAvailable(String name) throws IllegalArgumentException {
-        // проверка имени фигуры, стоит перенести (вместе со списком доступных) в класс фигур
         if(!Arrays.asList(availablePieces).contains(name)){
             throw new IllegalArgumentException(
                     "Такой фигуры в наборе нет. Правила: первый символ указывает цвет (b/w), дальше идёт название фигуры"
@@ -70,11 +69,9 @@ class MoveException extends Exception {
 public class ChessBoard {
     // добавить проверку на то, что короли не стоят на соседних клетках
     // проверка находится ли король под шахом
-    // запретить ставить короля на доску?
 
     protected String[][] board = {
             // доска
-            // реализовать нотацию, которая соотносится с индексами массива, вместо этих черточек непонятных
             {"_", "_", "_", "_", "_", "_", "_", "_"},
             {"_", "_", "_", "_", "_", "_", "_", "_"},
             {"_", "_", "_", "_", "_", "_", "_", "_"},
