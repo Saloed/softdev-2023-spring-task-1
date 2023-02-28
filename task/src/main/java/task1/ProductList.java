@@ -95,19 +95,19 @@ public class ProductList {
             } else this.price = price;
         }
 
-        public String getName() {
+        private String getName() {
             return name;
         }
 
-        public Double getPrice() {
+        private Double getPrice() {
             return price;
         }
 
-        public void setName(String name) {
+        private void setName(String name) {
             this.name = name;
         }
 
-        public void setPrice(Double price) {
+        private void setPrice(Double price) {
             if (price.toString().split("\\.")[1].length() > 2) {
                 throw new IllegalArgumentException("There shouldn't be more than 2 digits after the decimal point");
             }
