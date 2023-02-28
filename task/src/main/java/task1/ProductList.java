@@ -120,5 +120,4 @@ public class ProductList {
 
     public record ProdPair(int code, int amount) {
     }
-
 }
