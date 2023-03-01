@@ -23,15 +23,9 @@ public class TicTacToe {
             }
         }
     }
-    public void addX(int x, int y) {
+    public void add(int x, int y, Marker q) {
         if (x <= a && y <= a && x >= 0 && y >= 0) {
-            if (field[x][y] == Marker.EMPTY) field[x][y] = Marker.X;
-            else throw new IllegalArgumentException();
-        } else throw new IllegalArgumentException();
-    }
-    public void addO(int x, int y) {
-        if (x <= a && y <= a && x >= 0 && y >= 0) {
-            if (field[x][y] == Marker.EMPTY) field[x][y] = Marker.O;
+            if (field[x][y] == Marker.EMPTY) field[x][y] = q;
             else throw new IllegalArgumentException();
         } else throw new IllegalArgumentException();
     }
