@@ -67,8 +67,6 @@ class MoveException extends Exception {
 }
 
 public class ChessBoard {
-    // добавить проверку на правильность передающихся индексов (не отрицательные и не больше 7)
-    // добавить проверку на то, что короли не стоят на соседних клетках
     // проверка находится ли король под шахом
     // добавить метод дефолтной расстановки фигур ну так по приколу
 
@@ -84,7 +82,7 @@ public class ChessBoard {
             {"_", "_", "_", "_", "_", "_", "_", "_"},
     };
 
-    public ChessBoard() throws IllegalArgumentException, PutException{
+    public ChessBoard() throws IllegalArgumentException, PutException, IllegalArgumentException{
         // конструктор
         Piece bKing = new Piece("bKing");
         Piece wKing = new Piece("wKing");
@@ -92,9 +90,10 @@ public class ChessBoard {
         this.put(wKing, 7, 4);
     }
 
-    public void put(Piece piece, int x, int y) throws IllegalArgumentException, PutException {
+    public void put(Piece piece, int x, int y) throws IllegalArgumentException, PutException, IllegalArgumentException {
         // метод постановки фигуры на доску
         Piece.isNameAvailable(piece.name);
+        indexChecking(x, y);
         if(!board[x][y].equals("_")) {
             throw new PutException("Клетка уже занята");
         }
@@ -140,6 +139,7 @@ public class ChessBoard {
                     }
                 }
                 if (bkCount == 0) {
+                    kingChecking("wKing", x, y);
                     board[x][y] = piece.name;
                 } else {
                     throw new PutException("Такой король уже есть на доске");
@@ -156,6 +156,7 @@ public class ChessBoard {
                     }
                 }
                 if (wkCount == 0) {
+                    kingChecking("bKing", x, y);
                     board[x][y] = piece.name;
                 } else {
                     throw new PutException("Такой король уже есть на доске");
@@ -165,11 +166,20 @@ public class ChessBoard {
         }
     }
 
-    public void move(int xf, int yf, int xt, int yt) throws MoveException, NoSuchElementException {
+    public void move(int xf, int yf, int xt, int yt)
+            throws MoveException, NoSuchElementException, IllegalArgumentException, PutException {
         // метод передвижения фигур
+        // можно было бы сделать так, чтобы в качестве аргумента передавалась фигура, которую надо передвинуть,
+        // но я сделал вид, что разработчик сам прекрасно знает где на доске стоит нужная ему фигура
+        indexChecking(xf, yf);
+        indexChecking(xt, yt);
         if(!board[xf][yf].equals("_")) {
             if(board[xt][yt].equals("_")) {
                 String curPiece = board[xf][yf];
+                switch (curPiece) {
+                    case "bKing" -> kingChecking("wKing", xt, yt);
+                    case "wKing" -> kingChecking("bKing", xt, yt);
+                }
                 board[xf][yf] = "_";
                 board[xt][yt] = curPiece;
             }
@@ -183,8 +193,9 @@ public class ChessBoard {
 
     }
 
-    public void remove(int x, int y) {
+    public void remove(int x, int y) throws IllegalArgumentException {
         // метод очистки клетки
+        indexChecking(x, y);
         if(!board[x][y].equals("_")) {
             board[x][y] = "_";
         } else {
@@ -206,6 +217,27 @@ public class ChessBoard {
             System.out.print(8 - i + "\n\n");
         }
         System.out.println("a      b      c      d      e      f      g      h      \n");
+    }
+
+    private void indexChecking(int x, int y) throws IllegalArgumentException {
+        // проверка координат
+        if(x < 0 | x > 7 | y < 0 | y > 7) {
+            throw new IllegalArgumentException("Неверные координаты");
+        }
+    }
+
+    private void kingChecking(String name, int x, int y) throws PutException {
+        // проверка на соседство королей
+        for(int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                if(board[i][j].equals(name)) {
+                    if ((Math.abs(x - i) == 1 & Math.abs(y - j) == 1) | (Math.abs(x - i) == 1 & y - j == 0) |
+                            (x - i == 0 & Math.abs(y - j) == 1)) {
+                        throw new PutException("Короли не могут стоять на соседних клетках");
+                    }
+                }
+            }
+        }
     }
 
 }
