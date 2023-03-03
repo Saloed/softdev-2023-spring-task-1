@@ -1,19 +1,22 @@
 package task1;
 
+import org.jetbrains.annotations.NotNull;
+
+import java.math.BigDecimal;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class PriceList {
-    Map<Product, Double> prices = new LinkedHashMap<>();
+    Map<Product, BigDecimal> prices = new LinkedHashMap<>();
 
-    public boolean addProduct(Double price, Product product) {
+    public boolean addProduct(BigDecimal price, Product product) {
         if (prices.containsKey(getByCode(product.getCode()))) return false;
         prices.put(product, price);
         return true;
     }
 
 
-    public boolean changePrice(Product product,Double newPrice) {
+    public boolean changePrice(Product product, BigDecimal newPrice) {
         if (!prices.containsKey(getByCode(product.getCode()))) return false;
         prices.replace(product, prices.get(getByCode(product.getCode())), newPrice);
         return true;
@@ -33,8 +36,8 @@ public class PriceList {
         return true;
     }
 
-    public double cost(int pcode, int count) {
-        return prices.get(getByCode(pcode)) * count;
+    public BigDecimal cost(int pcode, int count) {
+        return prices.get(getByCode(pcode)).multiply(BigDecimal.valueOf(count));
 
     }
 
@@ -76,14 +79,21 @@ class Product {
 
     @Override
     public int hashCode() {
-        return super.hashCode();
+        return name.hashCode() + code;
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (o == null) {
+            return false;
+        }
+
+        if (getClass() != o.getClass()) {
+            return false;
+        }
         Product product = (Product) o;
+
         return code == product.code && name.equals(product.name);
     }
 }
