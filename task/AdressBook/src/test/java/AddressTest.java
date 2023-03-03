@@ -3,7 +3,6 @@ import java.util.ArrayList;
 import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 public class AddressTest {
-
     @Test
     public void testAdressBook() {
 
@@ -14,6 +13,9 @@ public class AddressTest {
         adressBook.add("Сидоров", adr2);
         Address adr1=new Address("Вторая",40,770);
         adressBook.add("Петров", adr1);
+
+        Address adr6=new Address("remove",70,70);
+        adressBook.remove("remove");
 
         Address adr3=new Address("Вторая",10,50);
         adressBook.replace("Кузнецов",adr3);

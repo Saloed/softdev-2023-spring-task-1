@@ -17,7 +17,7 @@ class Address {
 }
 
 public class AddressBook {
-    static Map<String, Address> book = new HashMap<>();
+    Map<String, Address> book = new HashMap<>();
 
     public void add(String name, Address adress) {
         book.put(name, adress);
@@ -37,14 +37,14 @@ public class AddressBook {
 
     public List<String> findStreet(String street) {
         List<String> res = new ArrayList<>();
-        for (HashMap.Entry<String, Address> entry : AddressBook.book.entrySet()) {
+        for (HashMap.Entry<String, Address> entry : book.entrySet()) {
             if (entry.getValue().street.equals(street)) res.add(entry.getKey());
         }
         return res;
     }
     public List<String> findStreetAndHouse(String street, int house) {
         List<String> res = new ArrayList<>();
-        for (HashMap.Entry<String, Address> entry : AddressBook.book.entrySet()) {
+        for (HashMap.Entry<String, Address> entry : book.entrySet()) {
             if (entry.getValue().street.equals(street) && entry.getValue().house==house) res.add(entry.getKey());
         }
         return res;

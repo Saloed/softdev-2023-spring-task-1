@@ -5,8 +5,12 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.example</groupId>
-    <artifactId>AdressBook</artifactId>
+    <artifactId>AdressBookRoot</artifactId>
     <version>1.0-SNAPSHOT</version>
+    <packaging>pom</packaging>
+    <modules>
+        <module>task/AdressBook</module>
+    </modules>
     <dependencies>
         <dependency>
             <groupId>junit</groupId>
