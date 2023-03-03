@@ -1,10 +1,8 @@
 package task1;
 
 import org.junit.jupiter.api.Test;
-
-import java.util.Arrays;
-
 import static org.junit.jupiter.api.Assertions.*;
+
 
 public class ChessTest {
 
@@ -29,7 +27,12 @@ public class ChessTest {
     public void wrongPositionTest() throws IllegalArgumentException, PutException {
         ChessBoard myChess = new ChessBoard();
         Piece bPawn = new Piece("bPawn");
-        Piece wKnight = new Piece("wKinght");
+        Piece wKnight = new Piece("wKnight");
         assertThrows(IllegalArgumentException.class, () -> myChess.put(wKnight, -1, 5));
+    }
+
+    @Test
+    public void wrongNameTest() throws IllegalArgumentException {
+        assertThrows(IllegalArgumentException.class, () -> { new Piece("pinkBishop"); } );
     }
 }

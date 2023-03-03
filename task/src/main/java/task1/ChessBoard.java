@@ -1,7 +1,6 @@
 package task1;
 
 
-import java.util.Arrays;
 import java.util.NoSuchElementException;
 
 
@@ -10,65 +9,51 @@ class Piece {
 
     String name;
     public Piece (String name) {
+        isNameAvailable(name);
         this.name = name;
     }
 
-    protected static final String[] availablePieces = {
+    protected enum AvailablePieces {
             // список доступных фигур
-            "bPawn",
-            "wPawn",
-            "bKnight",
-            "wKnight",
-            "bBishop",
-            "wBishop",
-            "bRook",
-            "wRook",
-            "bQueen",
-            "wQueen",
-            "bKing",
-            "wKing"
+            bPawn,
+            wPawn,
+            bKnight,
+            wKnight,
+            bBishop,
+            wBishop,
+            bRook,
+            wRook,
+            bQueen,
+            wQueen,
+            bKing,
+            wKing
     };
 
     protected static void isNameAvailable(String name) throws IllegalArgumentException {
-        if(!Arrays.asList(availablePieces).contains(name)){
-            throw new IllegalArgumentException(
-                    "Такой фигуры в наборе нет. Правила: первый символ указывает цвет (b/w), дальше идёт название фигуры"
-            );
-        }
+        AvailablePieces.valueOf(name);
     }
 }
 
 
 
 class PutException extends Exception {
-    private String message;
 
-    public PutException(String s) {
-        this.message = s;
+    public PutException(String message) {
+        super(message);
     }
 
-    public String toString(String s) {
-        return message;
-    }
 }
 
 class MoveException extends Exception {
 
-    private String message;
-
-    public MoveException(String s) {
-        this.message = s;
+    public MoveException(String message) {
+        super(message);
     }
 
-    public String toString(String s) {
-        return message;
-    }
 
 }
 
 public class ChessBoard {
-    // проверка находится ли король под шахом
-    // добавить метод дефолтной расстановки фигур ну так по приколу
 
     protected String[][] board = {
             // доска
@@ -82,7 +67,7 @@ public class ChessBoard {
             {"_", "_", "_", "_", "_", "_", "_", "_"},
     };
 
-    public ChessBoard() throws IllegalArgumentException, PutException, IllegalArgumentException{
+    public ChessBoard() throws PutException, IllegalArgumentException{
         // конструктор
         Piece bKing = new Piece("bKing");
         Piece wKing = new Piece("wKing");
@@ -90,9 +75,8 @@ public class ChessBoard {
         this.put(wKing, 7, 4);
     }
 
-    public void put(Piece piece, int x, int y) throws IllegalArgumentException, PutException, IllegalArgumentException {
+    public void put(Piece piece, int x, int y) throws PutException, IllegalArgumentException {
         // метод постановки фигуры на доску
-        Piece.isNameAvailable(piece.name);
         indexChecking(x, y);
         if(!board[x][y].equals("_")) {
             throw new PutException("Клетка уже занята");
