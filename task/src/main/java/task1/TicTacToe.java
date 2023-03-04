@@ -4,44 +4,47 @@ import static java.lang.Math.max;
 
 public class TicTacToe {
 
-    //    private ArrayList<ArrayList<Character>> field = new ArrayList<>();
-    private final int a;
-    private final int b;
-    private final char[][] key;
+    private final int fieldString;
+    private final int fieldColumn;
+    private final char[][] field;
 
-
-    public TicTacToe(int line, int colum) {
-        a = line;
-        b = colum;
-        key = new char[a][b];
+    public TicTacToe(int line, int column) {
+        fieldString = line;
+        fieldColumn = column;
+        field = new char[fieldString][fieldColumn];
         for (int i = 0; i < line; i++) {
-            for (int j = 0; j < colum; j++) {
-                key[i][j] = '-';
+            for (int j = 0; j < column; j++) {
+                field[i][j] = '-';
             }
         }
 
     }
 
-    public void addition(int line, int colum, char simb) {
-        if (line <= a && colum <= b) {
-            key[line][colum] = simb;
+    public void additionCross(int line, int column) {
+        if (line <= fieldString && column <= fieldColumn && field[line][column]!='O') {
+            field[line][column] = 'X';
+        }
+    }
+    public void additionZero(int line, int column) {
+        if (line <= fieldString && column <= fieldColumn && field[line][column]!='X') {
+            field[line][column] = 'O';
         }
     }
 
-    public Character symbolByPosition(int line, int colum) {
-        return key[line][colum];
+    public Character symbolByPosition(int line, int column) {
+        return field[line][column];
     }
 
-    public void delete(int line, int colum) {
-        key[line][colum] = '-';
+    public void delete(int line, int column) {
+        field[line][column] = '-';
     }
 
     public int maxCross() {
         int maxx = -1;
         int count = 0;
-        for (int i = 0; i < a; i++) {
-            for (int j = 0; j < b; j++) {
-                if (key[i][j] == 'x') {
+        for (int i = 0; i < fieldString; i++) {
+            for (int j = 0; j < fieldColumn; j++) {
+                if (field[i][j] == 'X') {
                     count++;
                 } else {
                     maxx = max(count, maxx);
@@ -51,9 +54,9 @@ public class TicTacToe {
             maxx = max(count, maxx);
             count = 0;
         }
-        for (int j = 0; j < b - 1; j++) {
-            for (int i = 0; i < a; i++) {
-                if (key[i][j] == 'x') {
+        for (int j = 0; j < fieldColumn - 1; j++) {
+            for (int i = 0; i < fieldString; i++) {
+                if (field[i][j] == 'X') {
                     count++;
                 } else {
                     maxx = max(count, maxx);
@@ -65,11 +68,11 @@ public class TicTacToe {
         }
         int c;
         int d;
-        for (int i = 0; i < b - 1; i++) {
+        for (int i = 0; i < fieldColumn - 1; i++) {
             c = 0;
             d = i;
-            while (c < a && d < b) {
-                if (key[c][d] == 'x') {
+            while (c < fieldString && d < fieldColumn) {
+                if (field[c][d] == 'X') {
                     count++;
                 } else {
                     maxx = max(count, maxx);
@@ -81,11 +84,11 @@ public class TicTacToe {
             maxx = max(count, maxx);
             count = 0;
         }
-        for (int i = 0; i < a - 1; i++) {
+        for (int i = 0; i < fieldString - 1; i++) {
             c = i;
             d = 0;
-            while (c < a && d < b) {
-                if (key[c][d] == 'x') {
+            while (c < fieldString && d < fieldColumn) {
+                if (field[c][d] == 'X') {
                     count++;
                 } else {
                     maxx = max(count, maxx);
@@ -97,11 +100,11 @@ public class TicTacToe {
             maxx = max(count, maxx);
             count = 0;
         }
-        for (int i = b - 1; i > 0; i--) {
+        for (int i = fieldColumn - 1; i > 0; i--) {
             c = 0;
             d = i;
-            while (c < a && d > 0) {
-                if (key[c][d] == 'x') {
+            while (c < fieldString && d > 0) {
+                if (field[c][d] == 'X') {
                     count++;
                 } else {
                     maxx = max(count, maxx);
@@ -113,11 +116,11 @@ public class TicTacToe {
             maxx = max(count, maxx);
             count = 0;
         }
-        for (int i = 0; i < a - 1; i++) {
+        for (int i = 0; i < fieldString - 1; i++) {
             c = i;
-            d = b - 1;
-            while (c < a && d > 0) {
-                if (key[c][d] == 'x') {
+            d = fieldColumn - 1;
+            while (c < fieldString && d > 0) {
+                if (field[c][d] == 'X') {
                     count++;
                 } else {
                     maxx = max(count, maxx);
@@ -135,9 +138,9 @@ public class TicTacToe {
     public int maxZero() {
         int maxx = -1;
         int count = 0;
-        for (int i = 0; i < a; i++) {
-            for (int j = 0; j < b; j++) {
-                if (key[i][j] == 'O') {
+        for (int i = 0; i < fieldString; i++) {
+            for (int j = 0; j < fieldColumn; j++) {
+                if (field[i][j] == 'O') {
                     count++;
                 } else {
                     maxx = max(count, maxx);
@@ -147,9 +150,9 @@ public class TicTacToe {
             maxx = max(count, maxx);
             count = 0;
         }
-        for (int j = 0; j < b; j++) {
-            for (int i = 0; i < a; i++) {
-                if (key[i][j] == 'O') {
+        for (int j = 0; j < fieldColumn; j++) {
+            for (int i = 0; i < fieldString; i++) {
+                if (field[i][j] == 'O') {
                     count++;
                 } else {
                     maxx = max(count, maxx);
@@ -161,11 +164,11 @@ public class TicTacToe {
         }
         int c;
         int d;
-        for (int i = 0; i < b - 1; i++) {
+        for (int i = 0; i < fieldColumn - 1; i++) {
             c = 0;
             d = i;
-            while (c < a && d < b) {
-                if (key[c][d] == 'O') {
+            while (c < fieldString && d < fieldColumn) {
+                if (field[c][d] == 'O') {
                     count++;
                 } else {
                     maxx = max(count, maxx);
@@ -177,11 +180,11 @@ public class TicTacToe {
             maxx = max(count, maxx);
             count = 0;
         }
-        for (int i = 0; i < a - 1; i++) {
+        for (int i = 0; i < fieldString - 1; i++) {
             c = i;
             d = 0;
-            while (c < a && d < b) {
-                if (key[c][d] == 'O') {
+            while (c < fieldString && d < fieldColumn) {
+                if (field[c][d] == 'O') {
                     count++;
                 } else {
                     maxx = max(count, maxx);
@@ -193,11 +196,11 @@ public class TicTacToe {
             maxx = max(count, maxx);
             count = 0;
         }
-        for (int i = b - 1; i > 1; i--) {
+        for (int i = fieldColumn - 1; i > 1; i--) {
             c = 0;
             d = i;
-            while (c < a && d > 0) {
-                if (key[c][d] == 'O') {
+            while (c < fieldString && d > 0) {
+                if (field[c][d] == 'O') {
                     count++;
                 } else {
                     maxx = max(count, maxx);
@@ -209,11 +212,11 @@ public class TicTacToe {
             maxx = max(count, maxx);
             count = 0;
         }
-        for (int i = 0; i < a - 1; i++) {
+        for (int i = 0; i < fieldString - 1; i++) {
             c = i;
-            d = b - 1;
-            while (c < a && d > 0) {
-                if (key[c][d] == 'O') {
+            d = fieldColumn - 1;
+            while (c < fieldString && d > 0) {
+                if (field[c][d] == 'O') {
                     count++;
                 } else {
                     maxx = max(count, maxx);
@@ -230,6 +233,6 @@ public class TicTacToe {
     }
 
     public char[][] getField() {
-        return key;
+        return field;
     }
 }

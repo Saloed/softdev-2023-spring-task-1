@@ -8,34 +8,68 @@ public class TicTacToeTest {
 
     @Test
     public void test1TicTacToe() {
-        TicTacToe k = new TicTacToe(5,5);
-        k.addition(3,3,'x');
-        char expectedSquare = 'x';
-        assertEquals(expectedSquare, k.symbolByPosition(3,3));
+        TicTacToe fir = new TicTacToe(5,5);
+        fir.additionCross(3,3);
+        char expected = 'X';
+        assertEquals(expected, fir.symbolByPosition(3,3));
     }
 
     @Test
     public void test2TicTacToe(){
         TicTacToe sec = new TicTacToe(5,5);
-        sec.addition(3,3,'x');
-        sec.addition(3,4,'x');
+        sec.additionCross(3,3);
+        sec.additionCross(3,4);
         assertEquals(2,sec.maxCross());
     }
 
     @Test
     public void test3TicIacToe(){
         TicTacToe fer = new TicTacToe(5,5);
-        fer.addition(3,3,'x');
-        fer.addition(4,4,'x');
+        fer.additionCross(3,3);
+        fer.additionCross(4,4);
         assertEquals(2,fer.maxCross());
     }
 
     @Test
     public void test4TicTacToe(){
         TicTacToe fo = new TicTacToe(8,8);
-        fo.addition(0,3,'O');
-        fo.addition(1,2,'O');
-        fo.addition(2,1,'O');
+        fo.additionZero(0,3);
+        fo.additionZero(1,2);
+        fo.additionZero(2,1);
         assertEquals(3,fo.maxZero());
+    }
+    @Test
+    public void test5TicTacToe(){
+        TicTacToe five = new TicTacToe(1,4);
+        five.additionZero(0,0);
+        five.additionZero(0,1);
+        five.additionZero(0,2);
+        five.additionZero(0,3);
+        five.additionCross(0,2);
+        assertEquals(4,five.maxZero());
+    }
+    @Test
+    public void test6TicTacToe(){
+        TicTacToe six = new TicTacToe(1,4);
+        six.additionZero(0,0);
+        six.additionZero(0,1);
+        six.delete(0,0);
+        assertEquals(1,six.maxZero());
+    }
+    @Test
+    public void test7TicTacToe(){
+        TicTacToe sev = new TicTacToe(8,5);
+        sev.additionCross(0,0);
+        sev.additionCross(0,1);
+        sev.additionCross(0,2);
+        sev.additionCross(0,3);
+        sev.additionCross(1,2);
+        sev.additionCross(2,1);
+        sev.additionCross(3,0);
+        sev.additionCross(4,1);
+        sev.additionCross(5,2);
+        sev.additionCross(6,3);
+        sev.additionCross(7,4);
+        assertEquals(5,sev.maxCross());
     }
 }
