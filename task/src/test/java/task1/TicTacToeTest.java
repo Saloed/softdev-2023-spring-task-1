@@ -1,19 +1,14 @@
 package task1;
-
 import org.junit.jupiter.api.Test;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
-
 public class TicTacToeTest {
-
     @Test
     public void test1TicTacToe() {
         TicTacToe fir = new TicTacToe(5,5);
         fir.additionCross(3,3);
-        char expected = 'X';
+        sign expected = sign.X;
         assertEquals(expected, fir.symbolByPosition(3,3));
     }
-
     @Test
     public void test2TicTacToe(){
         TicTacToe sec = new TicTacToe(5,5);
@@ -21,7 +16,6 @@ public class TicTacToeTest {
         sec.additionCross(3,4);
         assertEquals(2,sec.maxCross());
     }
-
     @Test
     public void test3TicIacToe(){
         TicTacToe fer = new TicTacToe(5,5);
@@ -29,7 +23,6 @@ public class TicTacToeTest {
         fer.additionCross(4,4);
         assertEquals(2,fer.maxCross());
     }
-
     @Test
     public void test4TicTacToe(){
         TicTacToe fo = new TicTacToe(8,8);
