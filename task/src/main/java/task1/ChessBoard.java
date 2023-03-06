@@ -16,8 +16,8 @@ enum Piece {
     bQueen,
     wQueen,
     bKing,
-    wKing;
-
+    wKing,
+    empty
 }
 
 
@@ -40,16 +40,16 @@ class MoveException extends Exception {
 
 public class ChessBoard {
 
-    protected String[][] board = {
+    protected Piece[][] board = {
             // доска
-            {"_", "_", "_", "_", "_", "_", "_", "_"},
-            {"_", "_", "_", "_", "_", "_", "_", "_"},
-            {"_", "_", "_", "_", "_", "_", "_", "_"},
-            {"_", "_", "_", "_", "_", "_", "_", "_"},
-            {"_", "_", "_", "_", "_", "_", "_", "_"},
-            {"_", "_", "_", "_", "_", "_", "_", "_"},
-            {"_", "_", "_", "_", "_", "_", "_", "_"},
-            {"_", "_", "_", "_", "_", "_", "_", "_"},
+            {Piece.empty, Piece.empty, Piece.empty, Piece.empty, Piece.empty, Piece.empty, Piece.empty, Piece.empty},
+            {Piece.empty, Piece.empty, Piece.empty, Piece.empty, Piece.empty, Piece.empty, Piece.empty, Piece.empty},
+            {Piece.empty, Piece.empty, Piece.empty, Piece.empty, Piece.empty, Piece.empty, Piece.empty, Piece.empty},
+            {Piece.empty, Piece.empty, Piece.empty, Piece.empty, Piece.empty, Piece.empty, Piece.empty, Piece.empty},
+            {Piece.empty, Piece.empty, Piece.empty, Piece.empty, Piece.empty, Piece.empty, Piece.empty, Piece.empty},
+            {Piece.empty, Piece.empty, Piece.empty, Piece.empty, Piece.empty, Piece.empty, Piece.empty, Piece.empty},
+            {Piece.empty, Piece.empty, Piece.empty, Piece.empty, Piece.empty, Piece.empty, Piece.empty, Piece.empty},
+            {Piece.empty, Piece.empty, Piece.empty, Piece.empty, Piece.empty, Piece.empty, Piece.empty, Piece.empty},
     };
 
     public ChessBoard() throws PutException, IllegalArgumentException{
@@ -63,45 +63,45 @@ public class ChessBoard {
     public void put(Piece piece, int x, int y) throws PutException, IllegalArgumentException {
         // метод постановки фигуры на доску
         indexChecking(x, y);
-        if(!board[x][y].equals("_")) {
+        if(!board[x][y].equals(Piece.empty)) {
             throw new PutException("Клетка уже занята");
         }
-        switch (piece.name()) {
-            case ("bPawn") -> {
+        switch (piece) {
+            case bPawn -> {
                 int bpCount = 0;
-                for (String[] line : board) {
-                    for (String square : line) {
-                        if (square.equals("bPawn")) {
+                for (Piece[] line : board) {
+                    for (Piece square : line) {
+                        if (square.equals(Piece.bPawn)) {
                             bpCount++;
                         }
                     }
                 }
                 if (bpCount <= 7) {
-                    board[x][y] = piece.name();
+                    board[x][y] = piece;
                 } else {
                     throw new PutException("Не может быть больше 8-ми пешек одного цвета");
                 }
             }
-            case ("wPawn") -> {
+            case wPawn -> {
                 int wpCount = 0;
-                for (String[] line : board) {
-                    for (String square : line) {
-                        if (square.equals("wPawn")) {
+                for (Piece[] line : board) {
+                    for (Piece square : line) {
+                        if (square.equals(Piece.wPawn)) {
                             wpCount++;
                         }
                     }
                 }
                 if (wpCount <= 7) {
-                    board[x][y] = piece.name();
+                    board[x][y] = piece;
                 } else {
                     throw new PutException("Не может быть больше 8-ми пешек одного цвета");
                 }
             }
-            case ("bKing") -> {
+            case bKing -> {
                 int bkCount = 0;
-                for (String[] line : board) {
-                    for (String square : line) {
-                        if (square.equals("bKing")) {
+                for (Piece[] line : board) {
+                    for (Piece square : line) {
+                        if (square.equals(Piece.bKing)) {
                             bkCount++;
                             break;
                         }
@@ -109,16 +109,16 @@ public class ChessBoard {
                 }
                 if (bkCount == 0) {
                     kingChecking("wKing", x, y);
-                    board[x][y] = piece.name();
+                    board[x][y] = piece;
                 } else {
                     throw new PutException("Такой король уже есть на доске");
                 }
             }
-            case ("wKing") -> {
+            case wKing -> {
                 int wkCount = 0;
-                for (String[] line : board) {
-                    for (String square : line) {
-                        if (square.equals("wKing")) {
+                for (Piece[] line : board) {
+                    for (Piece square : line) {
+                        if (square.equals(Piece.wKing)) {
                             wkCount++;
                             break;
                         }
@@ -126,12 +126,12 @@ public class ChessBoard {
                 }
                 if (wkCount == 0) {
                     kingChecking("bKing", x, y);
-                    board[x][y] = piece.name();
+                    board[x][y] = piece;
                 } else {
                     throw new PutException("Такой король уже есть на доске");
                 }
             }
-            default -> board[x][y] = piece.name();
+            default -> board[x][y] = piece;
         }
     }
 
@@ -140,14 +140,14 @@ public class ChessBoard {
         // метод передвижения фигур
         indexChecking(xf, yf);
         indexChecking(xt, yt);
-        if(!board[xf][yf].equals("_")) {
-            if(board[xt][yt].equals("_")) {
-                String curPiece = board[xf][yf];
+        if(!board[xf][yf].equals(Piece.empty)) {
+            if(board[xt][yt].equals(Piece.empty)) {
+                Piece curPiece = board[xf][yf];
                 switch (curPiece) {
-                    case "bKing" -> kingChecking("wKing", xt, yt);
-                    case "wKing" -> kingChecking("bKing", xt, yt);
+                    case bKing -> kingChecking("wKing", xt, yt);
+                    case wKing -> kingChecking("bKing", xt, yt);
                 }
-                board[xf][yf] = "_";
+                board[xf][yf] = Piece.empty;
                 board[xt][yt] = curPiece;
             }
             else {
@@ -163,8 +163,8 @@ public class ChessBoard {
     public void remove(int x, int y) throws IllegalArgumentException {
         // метод очистки клетки
         indexChecking(x, y);
-        if(!board[x][y].equals("_")) {
-            board[x][y] = "_";
+        if(!board[x][y].equals(Piece.empty)) {
+            board[x][y] = Piece.empty;
         } else {
             throw new NoSuchElementException("исходная клетка пуста");
         }
@@ -175,7 +175,12 @@ public class ChessBoard {
         // вывести в консоль текущую позицию(±красиво и с нотацией)
         for(int i = 0; i < 8; i++) {
             for(int j = 0; j < 8; j++) {
-                StringBuilder s = new StringBuilder(board[i][j]);
+                StringBuilder s = new StringBuilder();
+                if (board[i][j].equals(Piece.empty)){
+                    s.append("_");
+                } else {
+                    s.append(String.valueOf(board[i][j]));
+                }
                 while(s.length() < 7) {
                     s.append(" ");
                 }
@@ -197,7 +202,7 @@ public class ChessBoard {
         // проверка на соседство королей
         for(int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
-                if(board[i][j].equals(name)) {
+                if(board[i][j].equals(Piece.valueOf(name))) {
                     if ((Math.abs(x - i) == 1 & Math.abs(y - j) == 1) | (Math.abs(x - i) == 1 & y - j == 0) |
                             (x - i == 0 & Math.abs(y - j) == 1)) {
                         throw new PutException("Короли не могут стоять на соседних клетках");
