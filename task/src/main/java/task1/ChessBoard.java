@@ -4,36 +4,21 @@ package task1;
 import java.util.NoSuchElementException;
 
 
-class Piece {
-    // вспомогательный класс для фигур
+enum Piece {
+    bPawn,
+    wPawn,
+    bKnight,
+    wKnight,
+    bBishop,
+    wBishop,
+    bRook,
+    wRook,
+    bQueen,
+    wQueen,
+    bKing,
+    wKing;
 
-    String name;
-    public Piece (String name) {
-        isNameAvailable(name);
-        this.name = name;
-    }
-
-    protected enum AvailablePieces {
-            // список доступных фигур
-            bPawn,
-            wPawn,
-            bKnight,
-            wKnight,
-            bBishop,
-            wBishop,
-            bRook,
-            wRook,
-            bQueen,
-            wQueen,
-            bKing,
-            wKing
-    };
-
-    protected static void isNameAvailable(String name) throws IllegalArgumentException {
-        AvailablePieces.valueOf(name);
-    }
 }
-
 
 
 class PutException extends Exception {
@@ -69,8 +54,8 @@ public class ChessBoard {
 
     public ChessBoard() throws PutException, IllegalArgumentException{
         // конструктор
-        Piece bKing = new Piece("bKing");
-        Piece wKing = new Piece("wKing");
+        Piece bKing = Piece.bKing;
+        Piece wKing = Piece.wKing;
         this.put(bKing, 0, 4);
         this.put(wKing, 7, 4);
     }
@@ -81,7 +66,7 @@ public class ChessBoard {
         if(!board[x][y].equals("_")) {
             throw new PutException("Клетка уже занята");
         }
-        switch (piece.name) {
+        switch (piece.name()) {
             case ("bPawn") -> {
                 int bpCount = 0;
                 for (String[] line : board) {
@@ -92,7 +77,7 @@ public class ChessBoard {
                     }
                 }
                 if (bpCount <= 7) {
-                    board[x][y] = piece.name;
+                    board[x][y] = piece.name();
                 } else {
                     throw new PutException("Не может быть больше 8-ми пешек одного цвета");
                 }
@@ -107,7 +92,7 @@ public class ChessBoard {
                     }
                 }
                 if (wpCount <= 7) {
-                    board[x][y] = piece.name;
+                    board[x][y] = piece.name();
                 } else {
                     throw new PutException("Не может быть больше 8-ми пешек одного цвета");
                 }
@@ -124,7 +109,7 @@ public class ChessBoard {
                 }
                 if (bkCount == 0) {
                     kingChecking("wKing", x, y);
-                    board[x][y] = piece.name;
+                    board[x][y] = piece.name();
                 } else {
                     throw new PutException("Такой король уже есть на доске");
                 }
@@ -141,20 +126,18 @@ public class ChessBoard {
                 }
                 if (wkCount == 0) {
                     kingChecking("bKing", x, y);
-                    board[x][y] = piece.name;
+                    board[x][y] = piece.name();
                 } else {
                     throw new PutException("Такой король уже есть на доске");
                 }
             }
-            default -> board[x][y] = piece.name;
+            default -> board[x][y] = piece.name();
         }
     }
 
     public void move(int xf, int yf, int xt, int yt)
             throws MoveException, NoSuchElementException, IllegalArgumentException, PutException {
         // метод передвижения фигур
-        // можно было бы сделать так, чтобы в качестве аргумента передавалась фигура, которую надо передвинуть,
-        // но я сделал вид, что разработчик сам прекрасно знает где на доске стоит нужная ему фигура
         indexChecking(xf, yf);
         indexChecking(xt, yt);
         if(!board[xf][yf].equals("_")) {

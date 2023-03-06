@@ -9,8 +9,8 @@ public class ChessTest {
     @Test
     public void pawnCountTest() throws PutException {
         ChessBoard myChess = new ChessBoard();
-        Piece bPawn = new Piece("bPawn");
-        Piece wPawn = new Piece("wPawn");
+        Piece bPawn = Piece.bPawn;
+        Piece wPawn = Piece.wPawn;
         for(int i = 0; i < 8; i++) {
             myChess.put(bPawn, 1, i);
             myChess.put(wPawn, 6, i);
@@ -26,13 +26,8 @@ public class ChessTest {
     @Test
     public void wrongPositionTest() throws IllegalArgumentException, PutException {
         ChessBoard myChess = new ChessBoard();
-        Piece bPawn = new Piece("bPawn");
-        Piece wKnight = new Piece("wKnight");
+        Piece wKnight = Piece.wKnight;
         assertThrows(IllegalArgumentException.class, () -> myChess.put(wKnight, -1, 5));
     }
 
-    @Test
-    public void wrongNameTest() throws IllegalArgumentException {
-        assertThrows(IllegalArgumentException.class, () -> { new Piece("pinkBishop"); } );
-    }
 }
