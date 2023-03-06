@@ -1,5 +1,7 @@
 package task1;
 
+import org.jetbrains.annotations.Nullable;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -8,10 +10,9 @@ import java.util.Set;
 public class DirectedGraph {
 
     private final Set<String> vertices1 = new HashSet<>();
-    //private Set<Vertex> vertices;
     private final Set<Edge> edges = new HashSet<>();
 
-    private Edge findEdge(String start, String end) {
+    private @Nullable Edge findEdge(String start, String end) {
         for (Edge e: edges) {
             if (e.getStart() == start && e.getEnd() == end) {
                 return e;
