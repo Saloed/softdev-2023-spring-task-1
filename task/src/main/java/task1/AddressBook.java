@@ -2,6 +2,7 @@ package task1;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 class Address {
     public String street;
@@ -35,23 +36,19 @@ public class AddressBook {
         book.replace(surName, address);
     }
 
-    public ArrayList<String> getPeopleOnStreet(String street) {
-        ArrayList<String> peopleOnStreet = new ArrayList<String>();
-        for (Map.Entry<String, Address> element: book.entrySet()) {
-            if (element.getValue().street.equals(street)) {
-                peopleOnStreet.add(element.getKey());
-            }
-        }
+    public List<String> getPeopleOnStreet(String street) {
+        List<String> peopleOnStreet = new ArrayList<String>();
+        book.entrySet().stream()
+                .filter(e -> e.getValue().street.equals(street))
+                .forEach(e -> peopleOnStreet.add(e.getKey()));
         return peopleOnStreet;
     }
 
-    public ArrayList<String> getPeopleInHouse(String street, int house) {
-        ArrayList<String> peopleInHouse = new ArrayList<String>();
-        for (Map.Entry<String, Address> element: book.entrySet()) {
-            if (element.getValue().street.equals(street) && Integer.valueOf(element.getValue().house).equals(house)) {
-                peopleInHouse.add(element.getKey());
-            }
-        }
+    public List<String> getPeopleInHouse(String street, int house) {
+        List<String> peopleInHouse = new ArrayList<String>();
+        book.entrySet().stream()
+                .filter(e -> e.getValue().street.equals(street) && Integer.valueOf(e.getValue().house).equals(house))
+                .forEach(e -> peopleInHouse.add(e.getKey()));
         return peopleInHouse;
     }
 }

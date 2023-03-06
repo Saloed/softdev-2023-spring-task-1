@@ -3,6 +3,7 @@ package task1;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -21,13 +22,13 @@ public class AddressBookTest {
         aBook.addAddress(third, "Johnson");
         aBook.addAddress(fourth, "Geller");
 
-        ArrayList <String> list = new ArrayList<>();
+        List <String> list = new ArrayList<>();
         list.add("Johnson");
         list.add("Watson");
         list.add("Holmes");
         assertEquals(list, aBook.getPeopleOnStreet("Baker"));
 
-        ArrayList <String> list1 = new ArrayList<>();
+        List<String> list1 = new ArrayList<>();
         list1.add("Watson");
         list1.add("Holmes");
         assertEquals(list1, aBook.getPeopleInHouse("Baker", 221));
