@@ -1,7 +1,5 @@
 package task1;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.math.BigDecimal;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -42,23 +40,26 @@ public class PriceList {
     }
 
     public Product getByCode(int code) {
-        for (Product product : prices.keySet()) {
-            if (product.getCode() == code) return product;
-        }
-        return null;
+        if (prices.containsKey(new Product(code)))
+            return new Product(code);
+        else
+            return null;
+
+
     }
-
-
 }
 
 class Product {
     String name;
     int code;
 
-    public Product(String name, int code) {
+    Product(String name, int code) {
         this.name = name;
         this.code = code;
+    }
 
+    Product(int code) {
+        this.code = code;
     }
 
     public String getName() {
@@ -79,7 +80,7 @@ class Product {
 
     @Override
     public int hashCode() {
-        return name.hashCode() + code;
+        return code;
     }
 
     @Override
@@ -93,8 +94,10 @@ class Product {
             return false;
         }
         Product product = (Product) o;
-
-        return code == product.code && name.equals(product.name);
+        if (name == null)
+        return code == product.code;
+        else
+            return code == product.code && name.equals(product.name);
     }
 }
 

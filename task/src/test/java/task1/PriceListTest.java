@@ -37,8 +37,8 @@ class PriceListTest {
         assertFalse(priceList.addProduct(new BigDecimal("100.1"), new Product("Milk 3.2%", 1005695)));
         assertTrue(priceList.addProduct(new BigDecimal("115.1"), new Product("Water 5l", 1064595)));
         assertTrue(priceList.addProduct(new BigDecimal("195.1"), new Product("Olive oil 0.9l", 106465468)));
-        assertTrue(priceList.changeProductName(new Product("Olive oil 0.9l", 106465468), "Olive Oil Extra 0.9l"));
-        assertFalse(priceList.changeProductName(new Product("Potato Russia 1,1 kg", 106135798), "Potato Belarus 1,1 kg"));
+        assertTrue(priceList.changeProductName(new Product( 106465468), "Olive Oil Extra 0.9l"));
+        assertFalse(priceList.changeProductName(new Product( 106135798), "Potato Belarus 1,1 kg"));
     }
 
     @Test
@@ -48,9 +48,9 @@ class PriceListTest {
         assertFalse(priceList.addProduct(new BigDecimal("100.1"), new Product("Milk 3.2%", 1005695)));
         assertTrue(priceList.addProduct(new BigDecimal("115.1"), new Product("Water 5l", 1064595)));
         assertTrue(priceList.addProduct(new BigDecimal("195.1"), new Product("Olive oil 0.9l", 106465468)));
-        assertTrue(priceList.deleteProduct(new Product("Olive oil 0.9l", 106465468)));
-        assertFalse(priceList.deleteProduct(new Product("Olive oil 0.9l", 106465468)));
-        assertFalse(priceList.deleteProduct(new Product("Potato Russia 1,1 kg", 106135798)));
+        assertTrue(priceList.deleteProduct(new Product(106465468)));
+        assertFalse(priceList.deleteProduct(new Product( 106465468)));
+        assertFalse(priceList.deleteProduct(new Product(106135798)));
     }
     @Test
     void appProductCost() {
