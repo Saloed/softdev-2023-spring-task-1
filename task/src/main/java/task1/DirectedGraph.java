@@ -9,7 +9,7 @@ import java.util.Set;
 
 public class DirectedGraph {
 
-    private final Set<String> vertices1 = new HashSet<>();
+    private final Set<String> vertices = new HashSet<>();
     private final Set<Edge> edges = new HashSet<>();
 
     private @Nullable Edge findEdge(String start, String end) {
@@ -22,11 +22,11 @@ public class DirectedGraph {
     }
 
     public boolean addVertex(String vertexToAdd) {
-        return vertices1.add(vertexToAdd);
+        return vertices.add(vertexToAdd);
     }
 
     public boolean addEdge(String start, String end, int weight) {
-        if (!vertices1.contains(start) || !vertices1.contains(end)) return false;
+        if (!vertices.contains(start) || !vertices.contains(end)) return false;
         if (findEdge(start, end) != null) return false;
         edges.add(new Edge(start, end, weight));
         return true;
@@ -40,7 +40,7 @@ public class DirectedGraph {
             }
         }
         edges.removeAll(edgesToRemove);
-        return vertices1.remove(vertexToRemove);
+        return vertices.remove(vertexToRemove);
     }
 
     public boolean removeEdge(String start, String end) {
@@ -51,8 +51,8 @@ public class DirectedGraph {
     }
 
     public boolean changeName(String nameToChange, String newName) {
-        if (vertices1.contains(newName)) return false;
-        if (!vertices1.remove(nameToChange)) return false;
+        if (vertices.contains(newName)) return false;
+        if (!vertices.remove(nameToChange)) return false;
         addVertex(newName);
         for (Edge e: edges) {
             if (e.getStart() == nameToChange) e.setStart(newName);
@@ -64,20 +64,21 @@ public class DirectedGraph {
     public boolean changeWeight(String start, String end, int weight) {
         Edge edge = findEdge(start, end);
         if (edge == null) return false;
+        if (weight < 0) return false;
         edge.setWeight(weight);
         return true;
     }
 
-    public List<Edge> getIns(String name) {
-        ArrayList<Edge> ins = new ArrayList<>();
+    public Set<Edge> getIns(String name) {
+        HashSet<Edge> ins = new HashSet<>();
         for (Edge e: edges) {
             if (e.getEnd() == name) ins.add(e);
         }
         return ins;
     }
 
-    public List<Edge> getOuts(String name) {
-        ArrayList<Edge> outs = new ArrayList<>();
+    public Set<Edge> getOuts(String name) {
+        HashSet<Edge> outs = new HashSet<>();
         for (Edge e: edges) {
             if (e.getStart() == name) outs.add(e);
         }
