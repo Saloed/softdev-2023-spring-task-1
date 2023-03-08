@@ -1,9 +1,14 @@
 package task1;
+
+import java.util.ArrayList;
+
 import static java.lang.Math.max;
+
 public class TicTacToe {
     private final int fieldString;
     private final int fieldColumn;
     private final sign[][] field;
+
     public TicTacToe(int line, int column) {
         fieldString = line;
         fieldColumn = column;
@@ -14,22 +19,32 @@ public class TicTacToe {
             }
         }
     }
+
     public void additionCross(int line, int column) {
-        if (line <= fieldString && column <= fieldColumn && field[line][column]!=sign.O) {
+        if (line <= fieldString && column <= fieldColumn && field[line][column] != sign.O) {
             field[line][column] = sign.X;
         }
     }
+
     public void additionZero(int line, int column) {
-        if (line <= fieldString && column <= fieldColumn && field[line][column]!=sign.X) {
+        if (line <= fieldString && column <= fieldColumn && field[line][column] != sign.X) {
             field[line][column] = sign.O;
         }
     }
+
     public sign symbolByPosition(int line, int column) {
-        return field[line][column];
+        if (line <= fieldString && column <= fieldColumn) {
+            return field[line][column];
+        }
+        return sign.N;
     }
+
     public void delete(int line, int column) {
-        field[line][column] = sign.N;
+        if (line <= fieldString && column <= fieldColumn) {
+            field[line][column] = sign.N;
+        }
     }
+
     public int maxCross() {
         int maxx = -1;
         int count = 0;
@@ -121,6 +136,7 @@ public class TicTacToe {
         }
         return maxx;
     }
+
     public int maxZero() {
         int maxx = -1;
         int count = 0;
@@ -212,10 +228,12 @@ public class TicTacToe {
         }
         return maxx;
     }
+
     public sign[][] getField() {
         return field;
     }
 }
-enum sign{
-    X,O,N
+
+enum sign {
+    X, O, N
 }
