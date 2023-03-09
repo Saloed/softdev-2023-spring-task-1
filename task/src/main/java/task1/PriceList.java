@@ -94,10 +94,8 @@ class Product {
             return false;
         }
         Product product = (Product) o;
-        if (name == null)
         return code == product.code;
-        else
-            return code == product.code && name.equals(product.name);
+
     }
 }
 
