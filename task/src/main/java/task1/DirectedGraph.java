@@ -2,10 +2,9 @@ package task1;
 
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class DirectedGraph {
 
@@ -13,12 +12,9 @@ public class DirectedGraph {
     private final Set<Edge> edges = new HashSet<>();
 
     private @Nullable Edge findEdge(String start, String end) {
-        for (Edge e: edges) {
-            if (e.getStart() == start && e.getEnd() == end) {
-                return e;
-            }
-        }
-        return null;
+        return edges.stream()
+                .filter(e -> e.getStart() == start && e.getEnd() == end)
+                .findFirst().orElse(null);
     }
 
     public boolean addVertex(String vertexToAdd) {
@@ -70,19 +66,15 @@ public class DirectedGraph {
     }
 
     public Set<Edge> getIns(String name) {
-        HashSet<Edge> ins = new HashSet<>();
-        for (Edge e: edges) {
-            if (e.getEnd() == name) ins.add(e);
-        }
-        return ins;
+        return edges.stream()
+                .filter(edge -> edge.getEnd().equals(name))
+                .collect(Collectors.toSet());
     }
 
     public Set<Edge> getOuts(String name) {
-        HashSet<Edge> outs = new HashSet<>();
-        for (Edge e: edges) {
-            if (e.getStart() == name) outs.add(e);
-        }
-        return outs;
+        return edges.stream()
+                .filter(edge -> edge.getStart().equals(name))
+                .collect(Collectors.toSet());
     }
 
 }
