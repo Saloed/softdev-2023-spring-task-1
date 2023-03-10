@@ -15,8 +15,6 @@ package task1;
 
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Objects;
 
 import static java.lang.Math.*;
@@ -44,9 +42,9 @@ public class Board {
             board = new Figure[8][8];
             BPawnCount = 0;
             WPawnCount = 0;
-            Figure whiteKing = new Figure(true, "King", xWKing, yWKing);
+            Figure whiteKing = new Figure(true, Type.King, xWKing, yWKing);
             this.whiteKing = whiteKing;
-            Figure blackKing = new Figure(false, "King", xBKing, yBKing);
+            Figure blackKing = new Figure(false, Type.King, xBKing, yBKing);
             this.blackKing = blackKing;
             board[xWKing][yWKing] = whiteKing;
             board[xBKing][yBKing] = blackKing;
@@ -58,8 +56,8 @@ public class Board {
     }
 
     public void add(Figure f) throws IllegalArgumentException {
-        if (!Objects.equals(f.type, "King") && board[f.x][f.y] == null) {
-            if (f.type.equals("Pawn")) {
+        if (!Objects.equals(f.type, Type.King) && board[f.x][f.y] == null) {
+            if (f.type.equals(Type.Pawn)) {
                 if (f.isWhite && WPawnCount < 8) {
                     WPawnCount++;
                 } else if (!f.isWhite && BPawnCount < 8) {
@@ -74,8 +72,8 @@ public class Board {
     public void clear(int x, int y) {
         Figure f = board[x][y];
         if ((f != null)) {
-            if (!f.type.equals("King")) {
-                if (f.type.equals("Pawn")) {
+            if (!f.type.equals(Type.King)) {
+                if (f.type.equals(Type.Pawn)) {
                     if (f.isWhite) {
                         WPawnCount--;
                     } else
@@ -89,7 +87,7 @@ public class Board {
 
     public void move(Figure f, int x2, int y2) throws IllegalArgumentException {
         if (board[f.x][f.y] == f && check(x2, y2) && board[x2][y2] == null) {
-            if (f.type.equals("King")) {
+            if (f.type.equals(Type.King)) {
                 if (f.isWhite) {
                     if (areKingsClose(x2, y2, blackKing.x, blackKing.y)) {
                         throw new IllegalArgumentException("Невозможно передвинуть фигуру");
@@ -130,16 +128,16 @@ public class Board {
                 int dy = y - fig.y;
                 int dif = abs(fig.y - y);
                 switch (fig.type) {
-                    case "Pawn":
+                    case Pawn:
                         if ((isWhite && (dx == -1) && (dy == -1)) ||
                                 (isWhite && (dx == 1) && (dy == -1)) ||
                                 (!isWhite && (dx == -1) && (dy == 1)) ||
                                 (!isWhite && (dx == 1) && (dy == 1))) return true;
                         break;
-                    case "Knight":
+                    case Knight:
                         if ((abs(dx) == 1 && abs(dy) == 2) || (abs(dx) == 2 && abs(dy) == 1)) return true;
                         break;
-                    case "Rook":
+                    case Rook:
                         if (x == fig.x) {
                             return figuresBetweenStraight(x, y, fig.y);
                         }
@@ -147,7 +145,7 @@ public class Board {
                             return figuresBetweenStraight(y, x, fig.x);
                         }
                         break;
-                    case "Bishop":
+                    case Bishop:
                         if (x - y == fig.x - fig.y) {
                             return figuresBetweenSecDiagonal(dif, min(x, fig.x), min(y, fig.y));
                         }
@@ -155,7 +153,7 @@ public class Board {
                             return figuresBetweenPrimDiagonal(dif, min(x, fig.x), max(y, fig.y));
                         }
                         break;
-                    case "Queen":
+                    case Queen:
                         if (x == fig.x) {
                             if (figuresBetweenStraight(x, y, fig.y)) return true;
                         }
@@ -214,20 +212,26 @@ public class Board {
 
     static class Figure {
         boolean isWhite;
-        String type;
+        Type type;
         int x;
         int y;
 
-        public Figure(boolean isWhite, String type, int x, int y) throws IllegalArgumentException {
-            List<String> figures = new ArrayList<>(Arrays.asList( //зачем заносить в конструктор?
-                    "King", "Queen", "Bishop", "Knight", "Rook", "Pawn"));
-            if (figures.contains(type)) {
+        public Figure(boolean isWhite, Type type, int x, int y) throws IllegalArgumentException {
                 this.type = type;
                 this.isWhite = isWhite;
                 this.x = x;
                 this.y = y;
-                if (board[x][y] != null || !check(x, y)) System.out.println("Нельзя cоздать фигуру");
-            } else throw new IllegalArgumentException("Неправильный тип фигуры");
+                if (!check(x, y)) throw new IllegalArgumentException("Нельзя cоздать фигуру");
+        }
+        @Override
+        public int hashCode() {
+            int total = 31;
+
+            total = total * 31 + type.hashCode();
+            total = total * 31 + (isWhite ? 1 : 0);
+            total = total * 31 + x+y;
+
+            return total;
         }
 
         @Override
@@ -235,13 +239,22 @@ public class Board {
             if (this == obj) return true;
             if (getClass() == obj.getClass()) {
                 Figure other = (Figure) obj;
-                return type == other.type && isWhite == other.isWhite && x == other.x && y == other.y;
+                return type.equals(other.type) && isWhite == other.isWhite && x == other.x && y == other.y;
             }
             return false;
         }
 
     }
+    @Override
+    public int hashCode() {
+        int total = 31;
 
+        total = total * 31 + blackKing.hashCode();
+        total = total * 31 + whiteKing.hashCode();
+        total = total * 31 + figures.hashCode();
+
+        return total;
+    }
     @Override
     public boolean equals(Object obj) {
         if (this == obj) return true;
@@ -254,5 +267,9 @@ public class Board {
         }
         return false;
     }
-}
 
+
+}
+enum Type{
+    King, Queen, Bishop, Knight, Rook, Pawn
+}
