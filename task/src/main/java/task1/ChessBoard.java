@@ -60,7 +60,7 @@ public class ChessBoard {
         this.put(wKing, 7, 4);
     }
 
-    private int searchPawn(Piece piece) {
+    private boolean searchPawn(Piece piece) {
         int count = 0;
         for (Piece[] line : board) {
             for (Piece square : line) {
@@ -69,7 +69,7 @@ public class ChessBoard {
                 }
             }
         }
-        return count;
+        return count <= 7;
     }
 
     private boolean searchKing(Piece piece) {
@@ -91,14 +91,14 @@ public class ChessBoard {
         }
         switch (piece) {
             case bPawn -> {
-                if (searchPawn(Piece.bPawn) <= 7) {
+                if (searchPawn(Piece.bPawn)) {
                     board[x][y] = piece;
                 } else {
                     throw new PutException("Не может быть больше 8-ми пешек одного цвета");
                 }
             }
             case wPawn -> {
-                if (searchPawn(Piece.wPawn) <= 7) {
+                if (searchPawn(Piece.wPawn)) {
                     board[x][y] = piece;
                 } else {
                     throw new PutException("Не может быть больше 8-ми пешек одного цвета");
