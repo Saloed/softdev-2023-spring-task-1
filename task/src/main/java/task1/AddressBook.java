@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 class Address {
     public String street;
     public int house;
@@ -18,13 +19,33 @@ class Address {
 
 public class AddressBook {
 
-    public Map<String, Address> book = new HashMap<String, Address>();
+    public Map<String, Address> book = new HashMap<>();
+    public Map<String, List<String>> bookStreet = new HashMap<>();
+    public Map<Map<String, Integer>, List<String>> bookHouse = new HashMap<>();
 
     public void addAddress(Address address, String surName) {
         book.put(surName, address);
+
+        if (bookStreet.containsKey(address.street)) {
+            bookStreet.get(address.street).add(surName);
+        }
+        else {
+            bookStreet.put(address.street, new ArrayList<>());
+            bookStreet.get(address.street).add(surName);
+        }
+
+        if (bookHouse.containsKey(Map.of(address.street, address.house))) {
+            bookHouse.get(Map.of(address.street, address.house)).add(surName);
+        }
+        else {
+            bookHouse.put(Map.of(address.street, address.house), new ArrayList<>());
+            bookHouse.get(Map.of(address.street, address.house)).add(surName);
+        }
     }
 
     public void removePerson(String surName) {
+        bookStreet.get(getAddress(surName).street).remove(surName);
+        bookHouse.get(Map.of(getAddress(surName).street, getAddress(surName).house)).remove(surName);
         book.remove(surName);
     }
 
@@ -33,23 +54,16 @@ public class AddressBook {
     }
 
     public void changeAddress(Address address, String surName) {
-        book.replace(surName, address);
+        removePerson(surName);
+        addAddress(address, surName);
     }
 
     public List<String> getPeopleOnStreet(String street) {
-        List<String> peopleOnStreet = new ArrayList<String>();
-        book.entrySet().stream()
-                .filter(e -> e.getValue().street.equals(street))
-                .forEach(e -> peopleOnStreet.add(e.getKey()));
-        return peopleOnStreet;
+        return bookStreet.get(street);
     }
 
     public List<String> getPeopleInHouse(String street, int house) {
-        List<String> peopleInHouse = new ArrayList<String>();
-        book.entrySet().stream()
-                .filter(e -> e.getValue().street.equals(street) && Integer.valueOf(e.getValue().house).equals(house))
-                .forEach(e -> peopleInHouse.add(e.getKey()));
-        return peopleInHouse;
+        return bookHouse.get(Map.of(street, house));
     }
 }
 

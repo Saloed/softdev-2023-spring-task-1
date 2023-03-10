@@ -23,16 +23,15 @@ public class AddressBookTest {
         aBook.addAddress(fourth, "Geller");
 
         List <String> list = new ArrayList<>();
-        list.add("Johnson");
-        list.add("Watson");
         list.add("Holmes");
+        list.add("Watson");
+        list.add("Johnson");
         assertEquals(list, aBook.getPeopleOnStreet("Baker"));
 
         List<String> list1 = new ArrayList<>();
-        list1.add("Watson");
         list1.add("Holmes");
+        list1.add("Watson");
         assertEquals(list1, aBook.getPeopleInHouse("Baker", 221));
-
         aBook.removePerson("Johnson");
         aBook.changeAddress(fifth, "Watson");
         assertEquals(first, aBook.getAddress("Holmes"));
