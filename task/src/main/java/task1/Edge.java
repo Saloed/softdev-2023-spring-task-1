@@ -36,9 +36,14 @@ public class Edge {
         this.weight = weight;
     }
 
+    public Edge(String start, String end) {
+        this.start = start;
+        this.end = end;
+    }
+
     @Override
     public int hashCode() {
-        int result = weight;
+        int result = 0;
         result = 31 * result + start.hashCode();
         result = 31 * result + end.hashCode();
         return result;
@@ -51,7 +56,7 @@ public class Edge {
         Edge edge = (Edge) o;
         if (start != edge.start) return false;
         if (end != edge.end) return false;
-        return weight == edge.weight;
+        return true;
     }
 
 }
