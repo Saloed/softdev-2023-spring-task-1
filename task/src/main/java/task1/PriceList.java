@@ -22,7 +22,7 @@ public class PriceList {
 
     public boolean changeProductName(Product product, String newName) {
         if (!prices.containsKey(getByCode(product.getCode()))) return false;
-        Product nnProd = new Product(newName, product.code);
+        Product nnProd = new Product(newName, product.getCode());
         prices.put(nnProd, prices.get(getByCode(product.getCode())));
         prices.remove(getByCode(product.getCode()));
         return true;
@@ -50,8 +50,8 @@ public class PriceList {
 }
 
 class Product {
-    String name;
-    int code;
+    private String name;
+    private int code;
 
     Product(String name, int code) {
         this.name = name;
