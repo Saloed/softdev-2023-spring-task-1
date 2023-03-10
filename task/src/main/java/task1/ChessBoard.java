@@ -60,6 +60,29 @@ public class ChessBoard {
         this.put(wKing, 7, 4);
     }
 
+    private int searchPawn(Piece piece) {
+        int count = 0;
+        for (Piece[] line : board) {
+            for (Piece square : line) {
+                if (square.equals(piece)) {
+                    count++;
+                }
+            }
+        }
+        return count;
+    }
+
+    private boolean searchKing(Piece piece) {
+        for (Piece[] line : board) {
+            for (Piece square : line) {
+                if (square.equals(piece)) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
     public void put(Piece piece, int x, int y) throws PutException, IllegalArgumentException {
         // метод постановки фигуры на доску
         indexChecking(x, y);
@@ -68,64 +91,30 @@ public class ChessBoard {
         }
         switch (piece) {
             case bPawn -> {
-                int bpCount = 0;
-                for (Piece[] line : board) {
-                    for (Piece square : line) {
-                        if (square.equals(Piece.bPawn)) {
-                            bpCount++;
-                        }
-                    }
-                }
-                if (bpCount <= 7) {
+                if (searchPawn(Piece.bPawn) <= 7) {
                     board[x][y] = piece;
                 } else {
                     throw new PutException("Не может быть больше 8-ми пешек одного цвета");
                 }
             }
             case wPawn -> {
-                int wpCount = 0;
-                for (Piece[] line : board) {
-                    for (Piece square : line) {
-                        if (square.equals(Piece.wPawn)) {
-                            wpCount++;
-                        }
-                    }
-                }
-                if (wpCount <= 7) {
+                if (searchPawn(Piece.wPawn) <= 7) {
                     board[x][y] = piece;
                 } else {
                     throw new PutException("Не может быть больше 8-ми пешек одного цвета");
                 }
             }
             case bKing -> {
-                int bkCount = 0;
-                for (Piece[] line : board) {
-                    for (Piece square : line) {
-                        if (square.equals(Piece.bKing)) {
-                            bkCount++;
-                            break;
-                        }
-                    }
-                }
-                if (bkCount == 0) {
-                    kingChecking("wKing", x, y);
+                if (searchKing(Piece.bKing)) {
+                    kingChecking(Piece.wKing, x, y);
                     board[x][y] = piece;
                 } else {
                     throw new PutException("Такой король уже есть на доске");
                 }
             }
             case wKing -> {
-                int wkCount = 0;
-                for (Piece[] line : board) {
-                    for (Piece square : line) {
-                        if (square.equals(Piece.wKing)) {
-                            wkCount++;
-                            break;
-                        }
-                    }
-                }
-                if (wkCount == 0) {
-                    kingChecking("bKing", x, y);
+                if (searchKing(Piece.wKing)) {
+                    kingChecking(Piece.bKing, x, y);
                     board[x][y] = piece;
                 } else {
                     throw new PutException("Такой король уже есть на доске");
@@ -144,8 +133,8 @@ public class ChessBoard {
             if(board[xt][yt].equals(Piece.empty)) {
                 Piece curPiece = board[xf][yf];
                 switch (curPiece) {
-                    case bKing -> kingChecking("wKing", xt, yt);
-                    case wKing -> kingChecking("bKing", xt, yt);
+                    case bKing -> kingChecking(Piece.wKing, xt, yt);
+                    case wKing -> kingChecking(Piece.bKing, xt, yt);
                 }
                 board[xf][yf] = Piece.empty;
                 board[xt][yt] = curPiece;
@@ -198,11 +187,11 @@ public class ChessBoard {
         }
     }
 
-    private void kingChecking(String name, int x, int y) throws PutException {
+    private void kingChecking(Piece piece, int x, int y) throws PutException {
         // проверка на соседство королей
         for(int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
-                if(board[i][j].equals(Piece.valueOf(name))) {
+                if(board[i][j].equals(piece)) {
                     if ((Math.abs(x - i) == 1 & Math.abs(y - j) == 1) | (Math.abs(x - i) == 1 & y - j == 0) |
                             (x - i == 0 & Math.abs(y - j) == 1)) {
                         throw new PutException("Короли не могут стоять на соседних клетках");
