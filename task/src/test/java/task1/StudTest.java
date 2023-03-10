@@ -15,8 +15,8 @@ class StudeTest {
 
         Students students = new Students(3530901);
         Students check = new Students(3530901);
-        Map<String, List<Integer>> grade = new HashMap<>();
-        Map<String, List<Integer>> gr = new HashMap<>();
+        Map<String, List<Fives>> grade = new HashMap<>();
+        Map<String, List<Fives>> gr = new HashMap<>();
 
         students.addStudent("Смирнов Игнат");
         students.addStudent("Кириллов Данил");
@@ -29,14 +29,14 @@ class StudeTest {
 
         check.students.get("Кириллов Данил").put("Информатика", new ArrayList<>());
         check.students.get("Смирнов Игнат").put("Информатика", new ArrayList<>());
-        check.students.get("Смирнов Игнат").get("Информатика").add(3);
-        check.students.get("Смирнов Игнат").get("Информатика").add(4);
-        check.students.get("Смирнов Игнат").get("Информатика").add(5);
+        check.students.get("Смирнов Игнат").get("Информатика").add(Fives.THREE);
+        check.students.get("Смирнов Игнат").get("Информатика").add(Fives.FOUR);
+        check.students.get("Смирнов Игнат").get("Информатика").add(Fives.FIVE);
 
         students.addSubject("Информатика");
-        students.addGrade("Смирнов Игнат", "Информатика", 3);
-        students.addGrade("Смирнов Игнат", "Информатика", 4);
-        students.addGrade("Смирнов Игнат", "Информатика", 5);
+        students.addGrade("Смирнов Игнат", "Информатика", Fives.THREE);
+        students.addGrade("Смирнов Игнат", "Информатика", Fives.FOUR);
+        students.addGrade("Смирнов Игнат", "Информатика", Fives.FIVE);
         assertEquals(check.students, students.students);
 
     }
