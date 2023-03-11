@@ -25,8 +25,8 @@ public class AddressTest {
         Address adr5 = new Address("qwe", 40, 770);
         adressBook.add("asd", adr5);
         List<String> houseExp = new ArrayList<>();
-        houseExp.add("asd");
         houseExp.add("zxc");
+        houseExp.add("asd");
         assertEquals(houseExp, adressBook.findStreetAndHouse("qwe", 40));
         assertEquals(adr1, adressBook.findAdress("Петров"));
         Address find1 = new Address("find", 10, 11);

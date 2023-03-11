@@ -86,11 +86,5 @@ public class AddressBook {
     public List<String> findStreet(String street) {
         return streetBook.get(street);
     }
-    public List<String> findStreetAndHouse(String street, int house) {
-        List<String> res = new ArrayList<>();
-        for (Map.Entry<String, Address> entry : book.entrySet()) {
-            if (entry.getValue().street.equals(street) && entry.getValue().house == house) res.add(entry.getKey());
-        }
-        return res;
-    }
+    public List<String> findStreetAndHouse(String street, int house) {return houseBook.get(street).get(house);}
 }
