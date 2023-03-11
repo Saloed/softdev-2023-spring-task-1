@@ -9,7 +9,7 @@ public class TicTacToeTest {
     public void test1TicTacToe() {
         TicTacToe fir = new TicTacToe(5, 5);
         fir.additionCross(3, 3);
-        sign expected = sign.X;
+        Sign expected = Sign.X;
         assertEquals(expected, fir.symbolByPosition(3, 3));
     }
 
