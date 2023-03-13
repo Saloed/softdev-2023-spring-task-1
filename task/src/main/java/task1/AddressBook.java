@@ -21,7 +21,8 @@ public class AddressBook {
 
     public Map<String, Address> book = new HashMap<>();
     public Map<String, List<String>> bookStreet = new HashMap<>();
-    public Map<Map<String, Integer>, List<String>> bookHouse = new HashMap<>();
+    public Map<String, List<String>> bookHouse = new HashMap<>();
+
 
     public void addAddress(Address address, String surName) {
         book.put(surName, address);
@@ -34,18 +35,19 @@ public class AddressBook {
             bookStreet.get(address.street).add(surName);
         }
 
-        if (bookHouse.containsKey(Map.of(address.street, address.house))) {
-            bookHouse.get(Map.of(address.street, address.house)).add(surName);
+        if (bookHouse.containsKey(address.street + address.house)) {
+            bookHouse.get(address.street + address.house).add(surName);
         }
         else {
-            bookHouse.put(Map.of(address.street, address.house), new ArrayList<>());
-            bookHouse.get(Map.of(address.street, address.house)).add(surName);
+            bookHouse.put(address.street + address.house, new ArrayList<>());
+            bookHouse.get(address.street + address.house).add(surName);
         }
     }
 
     public void removePerson(String surName) {
-        bookStreet.get(getAddress(surName).street).remove(surName);
-        bookHouse.get(Map.of(getAddress(surName).street, getAddress(surName).house)).remove(surName);
+        Address adr = getAddress(surName);
+        bookStreet.get(adr.street).remove(surName);
+        bookHouse.get(adr.street + adr.house).remove(surName);
         book.remove(surName);
     }
 
@@ -62,8 +64,8 @@ public class AddressBook {
         return bookStreet.get(street);
     }
 
-    public List<String> getPeopleInHouse(String street, int house) {
-        return bookHouse.get(Map.of(street, house));
+    public List<String> getPeopleInHouse(String street, Integer house) {
+        return bookHouse.get(street + house);
     }
 }
 
