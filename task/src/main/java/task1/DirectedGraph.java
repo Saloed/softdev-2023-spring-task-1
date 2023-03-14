@@ -4,125 +4,98 @@ import java.util.*;
 
 public class DirectedGraph {
 
-    static class Vertex {
-        public Set<String> ins = new HashSet<>();
-        public Set<String> outs = new HashSet<>();
-    }
-
-    public static class Edge1 {
-        public String start;
-        public String end;
-        public int weight;
-
-        public Edge1(String start, String end, int weight) {
-            this.start = start;
-            this.end = end;
-            this.weight = weight;
-        }
-    }
-
-    private final Map<String, Vertex> vertices = new HashMap<>();
-    private final Map<Edge, Integer> e = new HashMap<>();
+    private final Map<String, Map<String, Integer>> vertexes = new HashMap<>();
 
     public boolean addVertex(String vertexToAdd) {
-        Vertex vertex = vertices.putIfAbsent(vertexToAdd, new Vertex());
-
-        return vertex == null;
+        return vertexes.putIfAbsent(vertexToAdd, new HashMap<>()) == null;
     }
 
     public boolean addEdge(String start, String end, int weight) {
-        Vertex startV = vertices.get(start);
-        Vertex endV = vertices.get(end);
+        if (weight <= 0) return false;
+        var startLinks = vertexes.get(start);
+        var endLinks = vertexes.get(end);
 
-        if (startV == null || endV == null) return false;
-        if (weight < 0) return false;
-        if (!startV.outs.add(end)) return false;
-        if (!endV.ins.add(start)) return false;
-
-        e.put(new Edge(start, end), weight);
+        if (startLinks.putIfAbsent(end, weight) != null) return false;
+        if (endLinks.putIfAbsent(start, -weight) != null) return false;
 
         return true;
     }
 
     public boolean removeVertex(String vertexToRemove) {
-        Vertex vertex = vertices.get(vertexToRemove);
+        var links = vertexes.remove(vertexToRemove);
+        if (links == null) return false;
 
-        if (vertex == null) return false;
-
-        for (String vName: vertex.ins) {
-            vertices.get(vertexToRemove).outs.remove(vertexToRemove);
-            e.remove(new Edge(vName, vertexToRemove));
-        }
-
-        for (String vName: vertex.outs) {
-            vertices.get(vertexToRemove).ins.remove(vertexToRemove);
-            e.remove(new Edge(vertexToRemove, vName));
+        for (var name: links.keySet()) {
+            vertexes.get(name).remove(vertexToRemove);
         }
 
         return true;
     }
 
     public boolean removeEdge(String start, String end) {
-        if (e.remove(new Edge(start, end)) == null) return false;
+        var startLinks = vertexes.get(start);
+        var endLinks = vertexes.get(end);
 
-        vertices.get(end).ins.remove(start);
-        vertices.get(start).outs.remove(end);
+        if (startLinks == null || endLinks == null) return false;
+        var weight = startLinks.get(end);
+        if (weight == null || weight < 0) return false;
+        startLinks.remove(end);
+        endLinks.remove(start);
 
         return true;
     }
 
     public boolean changeName(String nameToChange, String newName) {
-        Vertex vertex = vertices.get(nameToChange);
-        if (vertex == null) return false;
+        if (vertexes.get(newName) != null) return false;
+        var links = vertexes.remove(nameToChange);
+        if (links == null) return false;
+        vertexes.put(newName, links);
 
-        for (String vName: vertex.ins) {
-            Set<String> outs = vertices.get(vName).outs;
-            outs.remove(nameToChange);
-            outs.add(newName);
-
-            Integer weight = e.remove(new Edge(vName, nameToChange));
-            e.put(new Edge(vName, newName), weight);
-        }
-
-        for (String vName: vertex.outs) {
-            Set<String> ins = vertices.get(vName).ins;
-            ins.remove(nameToChange);
-            ins.add(newName);
-
-            Integer weight = e.remove(new Edge(nameToChange, vName));
-            e.put(new Edge(newName, vName), weight);
+        for (var name: links.keySet()) {
+            var oppositeLinks = vertexes.get(name);
+            var weight = oppositeLinks.remove(nameToChange);
+            oppositeLinks.put(newName, weight);
         }
 
         return true;
     }
 
     public boolean changeWeight(String start, String end, int weight) {
-        if (weight < 0) return false;
-        if (e.replace(new Edge(start, end), weight) == null) return false;
+        if (weight <= 0) return false;
+
+        var startLinks = vertexes.get(start);
+        var endLinks = vertexes.get(end);
+        if (startLinks == null || endLinks == null) return false;
+
+        var oldWeight = startLinks.get(end);
+        if (oldWeight == null || oldWeight < 0) return false;
+        startLinks.replace(end, weight);
+        endLinks.replace(start, -weight);
 
         return true;
     }
 
-    public Set<Edge1> getIns(String name) {
-        Set<Edge1> edges = new HashSet<>();
-        Vertex vertex = vertices.get(name);
-        if (vertex == null) return edges;
-
-        for (String v: vertex.ins) {
-            edges.add(new Edge1(v, name, e.get(new Edge(v, name))));
+    public Set<Edge> getIns(String name) {
+        Set<Edge> edges = new HashSet<>();
+        var links = vertexes.get(name);
+        if (links != null) {
+            for (var elem: links.entrySet()) {
+                if (elem.getValue() < 0) edges.add(new Edge(elem.getKey(), name, -elem.getValue()));
+            }
         }
+
         return edges;
     }
 
-    public Set<Edge1> getOuts(String name) {
-        Set<Edge1> edges = new HashSet<>();
-        Vertex vertex = vertices.get(name);
-        if (vertex == null) return edges;
-
-        for (String v: vertex.outs) {
-            edges.add(new Edge1(name, v, e.get(new Edge(name, v))));
+    public Set<Edge> getOuts(String name) {
+        Set<Edge> edges = new HashSet<>();
+        var links = vertexes.get(name);
+        if (links != null) {
+            for (var elem: links.entrySet()) {
+                if (elem.getValue() > 0) edges.add(new Edge(name, elem.getKey(), elem.getValue()));
+            }
         }
+
         return edges;
     }
-
 }

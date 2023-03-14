@@ -60,7 +60,7 @@ public class DirectedGraphTest {
         directedGraph.addVertex("c");
 
         directedGraph.addEdge("a", "b", 5);
-        directedGraph.addEdge("a","c",6);
+        directedGraph.addEdge("a", "c", 6);
 
         boolean result1 = directedGraph.removeEdge("a", "b");
         boolean result2 = directedGraph.removeEdge("c", "a");
@@ -80,7 +80,7 @@ public class DirectedGraphTest {
         directedGraph.addVertex("c");
 
         directedGraph.addEdge("a", "b", 5);
-        directedGraph.addEdge("a","c",6);
+        directedGraph.addEdge("a", "c", 6);
 
         boolean result1 = directedGraph.changeName("a", "A");
         boolean result2 = directedGraph.changeName("a", "A");
@@ -213,5 +213,4 @@ public class DirectedGraphTest {
         assertEquals(resultC, directedGraph.getOuts("c"));
         assertEquals(resultD, directedGraph.getOuts("d"));
     }
-
 }
