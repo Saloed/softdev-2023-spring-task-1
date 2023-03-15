@@ -18,26 +18,27 @@ public class BinaryTree {
         newNode.setNodeVal(nodeVal);
         if (root == null) {
             root = newNode;
+            return;
         }
-        else{
-            Node curNode = root;
-            Node ancestorNode;
-            while (true){
-                ancestorNode = curNode;
-                if (nodeVal == curNode.getNodeVal()) return;
-                else if (curNode.getNodeVal() < nodeVal) {
-                    curNode = curNode.getRightDes();
-                    if (curNode == null) {
-                        ancestorNode.setRightDes(newNode);
-                        return;
-                    }
+        Node curNode = root;
+        Node ancestorNode;
+        while (true) {
+            ancestorNode = curNode;
+            if (nodeVal == curNode.getNodeVal()) {
+                return;
+            }
+            if (curNode.getNodeVal() < nodeVal) {
+                curNode = curNode.getRightDes();
+                if (curNode == null) {
+                    ancestorNode.setRightDes(newNode);
+                    return;
                 }
-                else {
-                    curNode = curNode.getLeftDes();
-                    if (curNode == null) {
-                        ancestorNode.setLeftDes(newNode);
-                        return;
-                    }
+            } else {
+                curNode = curNode.getLeftDes();
+
+                if (curNode == null) {
+                    ancestorNode.setLeftDes(newNode);
+                    return;
                 }
             }
         }
@@ -46,16 +47,16 @@ public class BinaryTree {
     public boolean delNode(int nodeVal) {
         Node curNode = root;
         Node ancestorNode = root;
-        short leftOrRight = 0;
+        LeftOrRight leftOrRight = LeftOrRight.START;
         while (nodeVal != curNode.getNodeVal()) {
             ancestorNode = curNode;
             if (nodeVal > curNode.getNodeVal()) {
                 curNode = curNode.getRightDes();
-                leftOrRight = 1;
+                leftOrRight = LeftOrRight.RIGHT;
             }
             else {
                 curNode = curNode.getLeftDes();
-                leftOrRight = 2;
+                leftOrRight = LeftOrRight.LEFT;
             }
             if (curNode == null)
                 return false;
@@ -64,7 +65,7 @@ public class BinaryTree {
         if (curNode.getRightDes() == null && curNode.getLeftDes() == null) {
             if (curNode == root)
                 root = null;
-            else if (leftOrRight == 2)
+            else if (leftOrRight == LeftOrRight.LEFT)
                 ancestorNode.setLeftDes(null);
             else
                 ancestorNode.setRightDes(null);
@@ -73,17 +74,17 @@ public class BinaryTree {
         else if (curNode.getRightDes() == null) {
             if (curNode == root)
                 root = curNode.getLeftDes();
-            if (leftOrRight == 1)
+            if (leftOrRight == LeftOrRight.RIGHT)
                 ancestorNode.setRightDes(curNode.getLeftDes());
-            else if (leftOrRight == 2)
+            else if (leftOrRight == LeftOrRight.LEFT)
                 ancestorNode.setLeftDes(curNode.getLeftDes());
         }
         else if (curNode.getLeftDes() == null) {
             if (curNode == root)
                 root = curNode.getRightDes();
-            if (leftOrRight == 1)
+            if (leftOrRight == LeftOrRight.RIGHT)
                 ancestorNode.setRightDes(curNode.getRightDes());
-            else if (leftOrRight == 2)
+            else if (leftOrRight == LeftOrRight.LEFT)
                 ancestorNode.setLeftDes(curNode.getRightDes());
         }
         else {
@@ -100,7 +101,7 @@ public class BinaryTree {
             replaceNode.setLeftDes(curNode.getLeftDes());
             if (curNode == root)
                 root = replaceNode;
-            else if (leftOrRight == 1)
+            else if (leftOrRight == LeftOrRight.RIGHT)
                 ancestorNode.setRightDes(replaceNode);
             else
                 ancestorNode.setLeftDes(replaceNode);
@@ -111,6 +112,7 @@ public class BinaryTree {
     public Boolean findNode(int nodeVal) {
         Node curNode = root;
         Node ancestorNode = root;
+        if (root == null) return false;
         while (nodeVal != curNode.getNodeVal()) {
             ancestorNode = curNode;
             if (nodeVal > curNode.getNodeVal()) {
@@ -149,7 +151,6 @@ public class BinaryTree {
             alr.add(curNode.getLeftDes());
             alr.add(curNode.getRightDes());
         }
-        System.out.println(alr.toString());
         return alr;
 
     }
