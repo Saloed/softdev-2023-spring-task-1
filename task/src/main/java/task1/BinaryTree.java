@@ -35,7 +35,6 @@ public class BinaryTree {
                 }
             } else {
                 curNode = curNode.getLeftDes();
-
                 if (curNode == null) {
                     ancestorNode.setLeftDes(newNode);
                     return;
