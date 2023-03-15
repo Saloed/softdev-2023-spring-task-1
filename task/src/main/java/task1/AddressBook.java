@@ -21,7 +21,7 @@ public class AddressBook {
 
     public Map<String, Address> book = new HashMap<>();
     public Map<String, List<String>> bookStreet = new HashMap<>();
-    public Map<String, List<String>> bookHouse = new HashMap<>();
+    public Map<String, Map<Integer, List<String>>> bookHouse = new HashMap<>();
 
 
     public void addAddress(Address address, String surName) {
@@ -35,19 +35,26 @@ public class AddressBook {
             bookStreet.get(address.street).add(surName);
         }
 
-        if (bookHouse.containsKey(address.street + address.house)) {
-            bookHouse.get(address.street + address.house).add(surName);
+        if (bookHouse.containsKey(address.street)) {
+            if (bookHouse.get(address.street).containsKey(address.house))
+                bookHouse.get(address.street).get(address.house).add(surName);
+            else {
+                bookHouse.get(address.street).put(address.house, new ArrayList<>());
+                bookHouse.get(address.street).get(address.house).add(surName);
+            }
         }
         else {
-            bookHouse.put(address.street + address.house, new ArrayList<>());
-            bookHouse.get(address.street + address.house).add(surName);
+            Map<Integer, List<String>> map = new HashMap<>();
+            map.put(address.house, new ArrayList<>());
+            bookHouse.put(address.street, map);
+            bookHouse.get(address.street).get(address.house).add(surName);
         }
     }
 
     public void removePerson(String surName) {
         Address adr = getAddress(surName);
         bookStreet.get(adr.street).remove(surName);
-        bookHouse.get(adr.street + adr.house).remove(surName);
+        bookHouse.get(adr.street).get(adr.house).remove(surName);
         book.remove(surName);
     }
 
@@ -65,7 +72,7 @@ public class AddressBook {
     }
 
     public List<String> getPeopleInHouse(String street, Integer house) {
-        return bookHouse.get(street + house);
+        return bookHouse.get(street).get(house);
     }
 }
 
