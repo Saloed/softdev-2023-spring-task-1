@@ -44,31 +44,24 @@ public class TicTacToe {
     }
 
     public int maxCross() {
-        int maxx = maxi(Sign.X);
-        for (int i = 0; i < fieldColumn - 1; i++) {
-            maxx = max(maxx, rat1(0, i, Sign.X));
-            maxx = max(maxx, rat1(i, 0, Sign.X));
-            maxx = max(maxx, rat2(i, fieldColumn - 1, Sign.X));
-        }
-        for (int i = fieldColumn - 1; i > 0; i--) {
-            maxx = max(maxx, rat2(0, i, Sign.X));
-        }
-        return maxx;
+        return maximum(Sign.X);
     }
 
     public int maxZero() {
-        int maxx = maxi(Sign.O);
+        return maximum(Sign.O);
+    }
+    private int maximum(Sign lok){
+        int maxx = maxi(lok);
         for (int i = 0; i < fieldColumn - 1; i++) {
-            maxx = max(maxx, rat1(0, i, Sign.O));
-            maxx = max(maxx, rat1(i, 0, Sign.O));
-            maxx = max(maxx, rat2(i, fieldColumn - 1, Sign.O));
+            maxx = max(maxx, rat1(0, i, lok));
+            maxx = max(maxx, rat1(i, 0, lok));
+            maxx = max(maxx, rat2(i, fieldColumn - 1, lok));
         }
         for (int i = fieldColumn - 1; i > 0; i--) {
-            maxx = max(maxx, rat2(0, i, Sign.O));
+            maxx = max(maxx, rat2(0, i, lok));
         }
         return maxx;
     }
-
     public Sign[][] getField() {
         return field;
     }
