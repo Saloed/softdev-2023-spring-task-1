@@ -11,7 +11,9 @@ public class DirectedGraph {
     }
 
     public boolean addEdge(String start, String end, int weight) {
+        if (start == end) return false;
         if (weight <= 0) return false;
+
         var startLinks = vertexes.get(start);
         var endLinks = vertexes.get(end);
 
@@ -39,6 +41,7 @@ public class DirectedGraph {
         if (startLinks == null || endLinks == null) return false;
         var weight = startLinks.get(end);
         if (weight == null || weight < 0) return false;
+
         startLinks.remove(end);
         endLinks.remove(start);
 
@@ -47,8 +50,10 @@ public class DirectedGraph {
 
     public boolean changeName(String nameToChange, String newName) {
         if (vertexes.get(newName) != null) return false;
+
         var links = vertexes.remove(nameToChange);
         if (links == null) return false;
+
         vertexes.put(newName, links);
 
         for (var name: links.keySet()) {
@@ -69,6 +74,7 @@ public class DirectedGraph {
 
         var oldWeight = startLinks.get(end);
         if (oldWeight == null || oldWeight < 0) return false;
+
         startLinks.replace(end, weight);
         endLinks.replace(start, -weight);
 
@@ -78,6 +84,7 @@ public class DirectedGraph {
     public Set<Edge> getIns(String name) {
         Set<Edge> edges = new HashSet<>();
         var links = vertexes.get(name);
+
         if (links != null) {
             for (var elem: links.entrySet()) {
                 if (elem.getValue() < 0) edges.add(new Edge(elem.getKey(), name, -elem.getValue()));
@@ -90,6 +97,7 @@ public class DirectedGraph {
     public Set<Edge> getOuts(String name) {
         Set<Edge> edges = new HashSet<>();
         var links = vertexes.get(name);
+
         if (links != null) {
             for (var elem: links.entrySet()) {
                 if (elem.getValue() > 0) edges.add(new Edge(name, elem.getKey(), elem.getValue()));
