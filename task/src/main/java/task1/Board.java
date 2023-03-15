@@ -15,6 +15,7 @@ package task1;
 
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 import static java.lang.Math.*;
@@ -22,14 +23,14 @@ import static java.lang.Math.*;
 
 public class Board {
     public static Figure[][] board;
-    private static int BPawnCount;
-    private static int WPawnCount;
+    private static int bPawnCount;
+    private static int wPawnCount;
     Figure whiteKing;
     Figure blackKing;
 
-    ArrayList<Figure> figures = new ArrayList<>();
+    List<Figure> figures = new ArrayList<>();
 
-    public boolean areKingsClose(int x1, int y1, int x2, int y2) {
+    public static boolean areKingsClose(int x1, int y1, int x2, int y2) {
         int dx = abs(x2 - x1);
         int dy = abs(y2 - y1);
         return ((dx + dy) < 2 || (dx == 1 && dy == 1));
@@ -38,30 +39,29 @@ public class Board {
     public Board(int xWKing, int yWKing, int xBKing, int yBKing) {
         if (areKingsClose(xWKing, yWKing, xBKing, yBKing) || !check(xWKing, yWKing) || !check(xBKing, yBKing))
             throw new IllegalArgumentException("Неверные входные данные");
-        else {
-            board = new Figure[8][8];
-            BPawnCount = 0;
-            WPawnCount = 0;
-            Figure whiteKing = new Figure(true, Type.King, xWKing, yWKing);
-            this.whiteKing = whiteKing;
-            Figure blackKing = new Figure(false, Type.King, xBKing, yBKing);
-            this.blackKing = blackKing;
-            board[xWKing][yWKing] = whiteKing;
-            board[xBKing][yBKing] = blackKing;
-        }
+        board = new Figure[8][8];
+        bPawnCount = 0;
+        wPawnCount = 0;
+        Figure whiteKing = new Figure(true, Type.King, xWKing, yWKing);
+        this.whiteKing = whiteKing;
+        Figure blackKing = new Figure(false, Type.King, xBKing, yBKing);
+        this.blackKing = blackKing;
+        board[xWKing][yWKing] = whiteKing;
+        board[xBKing][yBKing] = blackKing;
+
     }
 
     public static boolean check(int x, int y) {
         return (x >= 0) && (y >= 0) && (x < 8) && (y < 8);
     }
 
-    public void add(Figure f) throws IllegalArgumentException {
+    public void add(Figure f) {
         if (!Objects.equals(f.type, Type.King) && board[f.x][f.y] == null) {
             if (f.type.equals(Type.Pawn)) {
-                if (f.isWhite && WPawnCount < 8) {
-                    WPawnCount++;
-                } else if (!f.isWhite && BPawnCount < 8) {
-                    BPawnCount++;
+                if (f.isWhite && wPawnCount < 8) {
+                    wPawnCount++;
+                } else if (!f.isWhite && bPawnCount < 8) {
+                    bPawnCount++;
                 } else throw new IllegalArgumentException("Слишком много пешек");
             }
             board[f.x][f.y] = f;
@@ -75,9 +75,9 @@ public class Board {
             if (!f.type.equals(Type.King)) {
                 if (f.type.equals(Type.Pawn)) {
                     if (f.isWhite) {
-                        WPawnCount--;
+                        wPawnCount--;
                     } else
-                        BPawnCount--;
+                        bPawnCount--;
                 }
                 board[x][y] = null;
                 figures.remove(f);
@@ -85,7 +85,7 @@ public class Board {
         }
     }
 
-    public void move(Figure f, int x2, int y2) throws IllegalArgumentException {
+    public void move(Figure f, int x2, int y2) {
         if (board[f.x][f.y] == f && check(x2, y2) && board[x2][y2] == null) {
             if (f.type.equals(Type.King)) {
                 if (f.isWhite) {
@@ -112,7 +112,7 @@ public class Board {
 
     }
 
-    public Boolean isKingInCheck(boolean isWhite) {
+    public boolean isKingInCheck(boolean isWhite) {
         int x;
         int y;
         if (isWhite) {
@@ -158,13 +158,13 @@ public class Board {
                             if (figuresBetweenStraight(x, y, fig.y)) return true;
                         }
                         if (y == fig.y) {
-                            if(figuresBetweenStraight(y, x, fig.x)) return true;
+                            if (figuresBetweenStraight(y, x, fig.x)) return true;
                         }
                         if (x - y == fig.x - fig.y) {
-                            if(figuresBetweenSecDiagonal(dif, min(x, fig.x), min(y, fig.y))) return true;
+                            if (figuresBetweenSecDiagonal(dif, min(x, fig.x), min(y, fig.y))) return true;
                         }
                         if (x + y == fig.x + fig.y) {
-                           if(figuresBetweenPrimDiagonal(dif, min(x, fig.x), max(y, fig.y))) return true;
+                            if (figuresBetweenPrimDiagonal(dif, min(x, fig.x), max(y, fig.y))) return true;
                         }
                         break;
                     default:
@@ -176,38 +176,32 @@ public class Board {
 
 
     private Boolean figuresBetweenStraight(int con, int var1, int var2) {
-        boolean flag = true;
         int start = min(var1, var2);
         int end = max(var1, var2);
         for (int i = start + 1; i < end; i++) {
             if (board[con][i] != null) {
-                flag = false;
-                break;
+                return false;
             }
         }
-        return flag;
+        return true;
     }
 
     private Boolean figuresBetweenSecDiagonal(int dif, int x, int y) {
-        boolean flag = true;
         for (int i = 1; i < dif; i++) {
             if (board[x + i][y + i] != null) {
-                flag = false;
-                break;
+                return false;
             }
         }
-        return flag;
+        return true;
     }
 
     private Boolean figuresBetweenPrimDiagonal(int dif, int x, int y) {
-        boolean flag = true;
         for (int i = 1; i < dif; i++) {
             if (board[x + i][y - i] != null) {
-                flag = false;
-                break;
+                return false;
             }
         }
-        return flag;
+        return true;
     }
 
     static class Figure {
@@ -216,35 +210,39 @@ public class Board {
         int x;
         int y;
 
-        public Figure(boolean isWhite, Type type, int x, int y) throws IllegalArgumentException {
-                this.type = type;
-                this.isWhite = isWhite;
-                this.x = x;
-                this.y = y;
-                if (!check(x, y)) throw new IllegalArgumentException("Нельзя cоздать фигуру");
+        public Figure(boolean isWhite, Type type, int x, int y) {
+            this.type = type;
+            this.isWhite = isWhite;
+            this.x = x;
+            this.y = y;
+            if (!check(x, y)) throw new IllegalArgumentException("Нельзя cоздать фигуру");
         }
+
         @Override
         public int hashCode() {
             int total = 31;
 
             total = total * 31 + type.hashCode();
             total = total * 31 + (isWhite ? 1 : 0);
-            total = total * 31 + x+y;
+            total = total * 31 + x + y;
 
             return total;
         }
 
         @Override
         public boolean equals(Object obj) {
-            if (this == obj) return true;
-            if (getClass() == obj.getClass()) {
-                Figure other = (Figure) obj;
-                return type.equals(other.type) && isWhite == other.isWhite && x == other.x && y == other.y;
+            if (obj != null) {
+                if (this == obj) return true;
+                if (getClass() == obj.getClass()) {
+                    Figure other = (Figure) obj;
+                    return type.equals(other.type) && isWhite == other.isWhite && x == other.x && y == other.y;
+                }
             }
             return false;
         }
 
     }
+
     @Override
     public int hashCode() {
         int total = 31;
@@ -255,21 +253,25 @@ public class Board {
 
         return total;
     }
+
     @Override
     public boolean equals(Object obj) {
-        if (this == obj) return true;
-        if (getClass() == obj.getClass()) {
-            Board other = (Board) obj;
-            for (Figure fig : figures) {
-                if (!other.figures.contains(fig)) return false;
+        if (obj != null) {
+            if (this == obj) return true;
+            if (getClass() == obj.getClass()) {
+                Board other = (Board) obj;
+                for (Figure fig : figures) {
+                    if (!other.figures.contains(fig)) return false;
+                }
+                return blackKing.equals(other.blackKing) && whiteKing.equals(other.whiteKing) && figures.size() == other.figures.size();
             }
-            return blackKing.equals(other.blackKing) && whiteKing.equals(other.whiteKing) && figures.size() == other.figures.size();
         }
         return false;
     }
 
 
 }
-enum Type{
+
+enum Type {
     King, Queen, Bishop, Knight, Rook, Pawn
 }
