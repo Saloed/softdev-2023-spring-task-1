@@ -27,13 +27,15 @@ public class BinaryTree {
             if (nodeVal == curNode.getNodeVal()) {
                 return;
             }
+
             if (curNode.getNodeVal() < nodeVal) {
                 curNode = curNode.getRightDes();
                 if (curNode == null) {
                     ancestorNode.setRightDes(newNode);
                     return;
                 }
-            } else {
+            }
+            else {
                 curNode = curNode.getLeftDes();
                 if (curNode == null) {
                     ancestorNode.setLeftDes(newNode);
