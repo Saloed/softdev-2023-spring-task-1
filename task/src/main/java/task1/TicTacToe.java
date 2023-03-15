@@ -67,18 +67,18 @@ public class TicTacToe {
     }
 
     private int maxi(Sign lok) {
-        int maximum = -1;
+        int maxx = -1;
         int coun = 0;
         for (int i = 0; i < fieldString; i++) {
             for (int j = 0; j < fieldColumn; j++) {
                 if (field[i][j] == lok) {
                     coun++;
                 } else {
-                    maximum = max(coun, maximum);
+                    maxx = max(coun, maxx);
                     coun = 0;
                 }
             }
-            maximum = max(coun, maximum);
+            maxx = max(coun, maxx);
             coun = 0;
         }
         for (int j = 0; j < fieldColumn; j++) {
@@ -86,15 +86,15 @@ public class TicTacToe {
                 if (field[i][j] == lok) {
                     coun++;
                 } else {
-                    maximum = max(coun, maximum);
+                    maxx = max(coun, maxx);
                     coun = 0;
                 }
             }
-            maximum = max(coun, maximum);
+            maxx = max(coun, maxx);
             coun = 0;
         }
 
-        return maximum;
+        return maxx;
     }
 
     private int rat1(int ci, int di, Sign lok) {
