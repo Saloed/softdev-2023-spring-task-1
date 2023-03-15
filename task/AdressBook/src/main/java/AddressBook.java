@@ -27,18 +27,17 @@ public class AddressBook {
             nameList.add(name);
             streetBook.put(adress.street, nameList);
         }
-
+        List<String> list = new ArrayList<>();
         if (houseBook.containsKey(adress.street)) {
             if (houseBook.get(adress.street).containsKey(adress.house))
                 houseBook.get(adress.street).get(adress.house).add(name);
             else {
-                List<String> list = new ArrayList<>();
+
                 list.add(name);
                 houseBook.get(adress.street).put(adress.house, list);
             }
         } else {
             Map<Integer, List<String>> map = new HashMap<>();
-            List<String> list = new ArrayList<>();
             list.add(name);
             map.put(adress.house, list);
             houseBook.put(adress.street, map);
@@ -53,8 +52,8 @@ public class AddressBook {
         list.add(name);
         houseMap.put(houseNum, list);
         book.remove(name);
-        streetBook.remove(street, name);
-        houseBook.remove(street, houseMap);
+        streetBook.get(street).remove(name);
+        houseBook.get(street).get(houseNum).remove(name);
     }
 
     public void replace(String name, Address adress) {
