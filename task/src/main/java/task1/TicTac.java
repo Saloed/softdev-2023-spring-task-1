@@ -29,48 +29,54 @@ public class TicTac {
     public void add(int x, int y, String el) {
         if (x >= size || y >= size || x < 0 || y < 0 || !Arrays.asList(m).contains(el))
             throw new IllegalArgumentException();
-        else if (!Pole[y][x].equals("_")) throw new IllegalArgumentException();
-        else Pole[y][x] = el;
+        else if (!Pole[x][y].equals("_")) throw new IllegalArgumentException();
+        else Pole[x][y] = el;
     }
 
     public void del(int x, int y) {
         if (x >= size || y >= size || x < 0 || y < 0) throw new IllegalArgumentException();
-        else Pole[y][x] = m[2];
+        else Pole[x][y] = m[2];
     }
 
     public int checklen(String x) {
-        for (String[] row: Pole) {
-            System.out.println(Arrays.toString(row));
+        for (String[] r : Pole) {
+            System.out.println(Arrays.toString(r));
         }
-        int l = 0, l2, l3, res = 0;
+        int l = 1, vs, sh, res = 0;
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {
-                if (Pole[i][j].equals(x)) {
-                    l2 = j;
-                    while (Pole[i][l2].equals(x) && l2 < size - 1) {
-                        l++;
-                        l2++;
-                    }
-                    res = Math.max(l, res);
-                    l = 0;
-                    System.out.println(res);
-                    l3 = i;
-                    while (Pole[l3][j].equals(x) && l3 < size - 1) {
-                        l++;
-                        l3++;
-                    }
-                    res = Math.max(l, res);
-                    l = 0;
-                    System.out.println(res);
-                    while (Pole[l3][l2].equals(x) && l2 < size - 1 && l3 < size - 1) {
-                        l++;
-                        l3++;
-                        l2++;
-                    }
-                    res = Math.max(l, res);
-                    l = 0;
-                    System.out.println(res);
+                sh = j;
+                while (Pole[i][sh].equals(x) && sh < size - 1) {
+                    l++;
+                    sh++;
                 }
+                res = Math.max(l, res);
+                l = 1;
+                vs = i;
+                while (Pole[vs][j].equals(x) && vs < size - 1) {
+                    l++;
+                    vs++;
+                }
+                res = Math.max(l, res);
+                l = 1;
+                sh = j;
+                vs = i;
+                while (Pole[vs][sh].equals(x) && sh < size - 1 && vs < size - 1) {
+                    l++;
+                    vs++;
+                    sh++;
+                }
+                res = Math.max(l, res);
+                l = 1;
+                sh = j;
+                vs = i;
+                while (Pole[vs][sh].equals(x) && sh < size - 1 && vs < size - 1 && sh > 0) {
+                    Pole[vs][sh] = m[2];
+                    sh--;
+                    vs++;
+                    l++;
+                }
+                res = Math.max(l, res);
             }
         }
         return res;
