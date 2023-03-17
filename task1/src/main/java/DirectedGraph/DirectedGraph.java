@@ -1,14 +1,19 @@
 package DirectedGraph;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class DirectedGraph {
 
     public static class Vertex {
         private String name;
+        private final HashMap<String, List<Arc>> incArc;
+        private final HashMap<String, List<Arc>> outArc;
 
         public Vertex(String name) {
             this.name = name;
+            this.incArc = new HashMap<>();
+            this.outArc = new HashMap<>();
         }
 
         public void setName(String name) {
@@ -20,7 +25,7 @@ public class DirectedGraph {
         }
 
         @Override
-        public boolean equals(Object obj) {
+        public boolean equals(Object obj) { // TODO: compare outcoming and incomimng
             if (!(obj instanceof Vertex)) return false;
             return Objects.equals(this.name, ((Vertex) obj).name);
         }
@@ -29,6 +34,7 @@ public class DirectedGraph {
         public int hashCode() {
             return name.hashCode();
         }
+
     }
 
     public static class Arc {
@@ -67,15 +73,6 @@ public class DirectedGraph {
     private final Map<String, Vertex> vertexes = new HashMap<>();
     private final Set<Arc> arcs = new HashSet<>();
 
-    public DirectedGraph(Set<Vertex> vertexSet, Set<Arc> arcs) {
-        this.arcs.addAll(arcs);
-        for (Vertex vertex : vertexSet) this.vertexes.put(vertex.name, vertex);
-        for (Arc i : arcs) {
-            this.vertexes.put(i.begin.name, i.begin);
-            this.vertexes.put(i.end.name, i.end);
-        }
-    }
-
     public DirectedGraph(String vertexesString, String arcsString) {
         if (vertexesString != null && arcsString != null) {
             String[] vertexesNames = vertexesString.split(", ");
@@ -97,7 +94,14 @@ public class DirectedGraph {
                 if (vertexes.containsKey(end)) endVertex = vertexes.get(end);
                 else endVertex = new Vertex(end);
 
-                arcs.add(new Arc(beginVertex, endVertex, weight));
+                Arc newArc = new Arc(beginVertex, endVertex, weight);
+                arcs.add(newArc);
+
+                if (!endVertex.incArc.containsKey(end)) endVertex.incArc.put(end, new ArrayList<>());
+                endVertex.incArc.get(end).add(newArc);
+
+                if (!beginVertex.outArc.containsKey(begin)) beginVertex.outArc.put(begin, new ArrayList<>());
+                beginVertex.outArc.get(begin).add(newArc);
             }
         }
     }
@@ -131,8 +135,11 @@ public class DirectedGraph {
     }
 
     public Arc getArcByName(String begin, String end) {
-        for (Arc i : arcs) {
-            if (Objects.equals(i.begin.name, begin) && Objects.equals(i.end.name, end)) return i;
+        if (vertexes.containsKey(begin) && vertexes.containsKey(end) && getVertex(begin).outArc.get(begin) != null) {
+            List<Arc> arcList = getVertex(begin).outArc.get(begin);
+            for (Arc arc: arcList) {
+                if (Objects.equals(arc.end.name, end)) return arc;
+            }
         }
         return null;
     }
@@ -156,7 +163,14 @@ public class DirectedGraph {
             endVertex = new Vertex(end);
             addVertex(endVertex);
         }
-        arcs.add(new Arc(beginVertex, endVertex, weight));
+        Arc newArc = new Arc(beginVertex, endVertex, weight);
+        arcs.add(newArc);
+
+        if (!endVertex.incArc.containsKey(end)) endVertex.incArc.put(end, new ArrayList<>());
+        endVertex.incArc.get(end).add(newArc);
+
+        if (!beginVertex.outArc.containsKey(begin)) beginVertex.outArc.put(begin, new ArrayList<>());
+        beginVertex.outArc.get(begin).add(newArc);
     }
 
     public void deleteArc(String begin, String end) {
@@ -164,11 +178,7 @@ public class DirectedGraph {
     }
 
     public Set<Arc> getIncomingArcs(Vertex vertex) {
-        Set<Arc> result = new HashSet<>();
-        for (Arc arc : arcs) {
-            if (Objects.equals(arc.end, vertex)) result.add(arc);
-        }
-        return result;
+        return vertex.incArc.values().stream().flatMap(Collection::stream).collect(Collectors.toSet());
     }
 
     public Set<Arc> getOutcomingArcs(Vertex vertex) {

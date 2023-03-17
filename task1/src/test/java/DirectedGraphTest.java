@@ -69,7 +69,7 @@ public class DirectedGraphTest {
                 , graph.getIncomingArcs(graph.getVertex("cc")));
     }
 
-    @Test
+   @Test
     public void getOutcomingArcs() {
         DirectedGraph graph = new DirectedGraph("vv, cc, ii, kk, ff", "vv, cc, 4; vv, ii, 4; kk, cc, 9; cc, ff, 5");
         assertEquals(Set.of(
