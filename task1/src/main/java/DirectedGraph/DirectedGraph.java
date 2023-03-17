@@ -25,7 +25,7 @@ public class DirectedGraph {
         }
 
         @Override
-        public boolean equals(Object obj) { // TODO: compare outcoming and incomimng
+        public boolean equals(Object obj) {
             if (!(obj instanceof Vertex)) return false;
             return Objects.equals(this.name, ((Vertex) obj).name);
         }
