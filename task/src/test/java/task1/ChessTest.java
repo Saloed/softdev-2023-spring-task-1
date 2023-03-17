@@ -2,15 +2,14 @@ package task1;
 
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class ChessTest {
     @Test
     public void testChess() {
         Board chess = new Board(4, 3, 4, 7);
-        Board blank = new Board(4, 3, 4, 7);
         Board.Figure rook = new Board.Figure(true, Type.Rook, 2, 6);
+        Board blank = new Board(4, 3, 4, 7);
         chess.add(rook);
         chess.move(rook, 3, 7);
         chess.clear(3, 7);
@@ -76,9 +75,10 @@ public class ChessTest {
         chessboard.add(new Board.Figure(false, Type.Rook, 3, 0));
         chessboard.add(new Board.Figure(false, Type.Queen, 7, 7));
         chessboard.add(new Board.Figure(false, Type.Knight, 5, 5));
-        assertEquals(true, chessboard.isKingInCheck(true));
-        assertEquals(false, chessboard.isKingInCheck(false));
+        assertTrue(chessboard.isKingInCheck(true));
+        assertFalse(chessboard.isKingInCheck(false));
     }
+
 }
 
 
