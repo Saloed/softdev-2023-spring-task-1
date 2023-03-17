@@ -182,11 +182,7 @@ public class DirectedGraph {
     }
 
     public Set<Arc> getOutcomingArcs(Vertex vertex) {
-        Set<Arc> result = new HashSet<>();
-        for (Arc arc : arcs) {
-            if (Objects.equals(arc.begin, vertex)) result.add(arc);
-        }
-        return result;
+        return vertex.outArc.values().stream().flatMap(Collection::stream).collect(Collectors.toSet());
     }
 
     @Override
